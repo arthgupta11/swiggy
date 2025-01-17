@@ -1,0 +1,445 @@
+{
+  "env": {
+    "es2021": true,
+    "node": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2021,
+
+    "sourceType": "module",
+    "project": "./tsconfig.json"
+  },
+
+  "plugins": [
+    "@typescript-eslint",
+    "import",
+    "compat",
+    "unicorn",
+    "sonarjs",
+    "promise",
+    "canonical"
+  ],
+  "root": true,
+  "rules": {
+    "sort-imports": "error",
+    "@typescript-eslint/explicit-module-boundary-types": "error",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/consistent-type-definitions": ["error", "interface"],
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/strict-boolean-expressions": "error",
+    "@typescript-eslint/explicit-member-accessibility": "error",
+    "@typescript-eslint/no-empty-function": "error",
+    "@typescript-eslint/no-magic-numbers": ["warn", { "ignore": [0, 1] }],
+    "@typescript-eslint/no-namespace": "warn",
+    "@typescript-eslint/no-use-before-define": "error",
+    "@typescript-eslint/no-this-alias": "error",
+    "@typescript-eslint/no-unsafe-member-access": "error",
+    "no-await-in-loop": "warn",
+    "no-extra-boolean-cast": "error",
+    "no-new": "warn",
+    "no-multi-spaces": "error",
+    "no-prototype-builtins": "error",
+    "no-return-assign": ["error", "always"],
+    "no-throw-literal": "error",
+    "no-useless-constructor": "error",
+    "no-void": "warn",
+    "prefer-destructuring": ["error", { "object": true, "array": false }],
+    "require-await": "error",
+    "valid-jsdoc": "error",
+    "no-mixed-operators": "error",
+    "consistent-return": "error",
+    "dot-notation": "error",
+    "no-implicit-coercion": "error",
+    "no-nested-ternary": "error",
+    "no-unreachable": "error",
+    "no-unexpected-multiline": "error",
+    "no-global-assign": "error",
+    "no-sequences": "error",
+    "no-sparse-arrays": "error",
+    "no-template-curly-in-string": "error",
+    "no-trailing-spaces": "error",
+    "no-unused-labels": "error",
+    "no-invalid-this": "error",
+    "no-irregular-whitespace": "error",
+    "new-parens": "error",
+    "no-bitwise": "error",
+    "no-cond-assign": "error",
+    "no-useless-return": "error",
+    "canonical/no-restricted-strings": "error",
+    "canonical/no-use-extend-native": "error",
+    "canonical/prefer-inline-type-import": "error",
+    "unicorn/prevent-abbreviations": "error",
+    "unicorn/no-abusive-eslint-disable": "error",
+    "unicorn/no-null": "error",
+    "unicorn/prefer-array-some": "warn",
+    "unicorn/no-static-only-class": "off",
+    "unicorn/prefer-module": "off",
+    "unicorn/prefer-top-level-await": "error",
+    "unicorn/expiring-todo-comments": "off",
+    "sonarjs/no-duplicate-string": "error",
+    "@typescript-eslint/adjacent-overload-signatures": "error",
+    "max-params": ["error", 7],
+
+    "@typescript-eslint/unified-signatures": "error",
+  // Disallow function overloads that could be unified into a single function signature.
+
+  "@typescript-eslint/interface-name-prefix": "off",
+  // Deprecated: Was used to enforce or disallow a prefix for interface names (e.g., "I"). It is recommended to turn it off or remove.
+
+  "@typescript-eslint/no-non-null-assertion": "error",
+  // Disallow non-null assertions using the `!` postfix operator to avoid runtime errors.
+
+  "@typescript-eslint/no-require-imports": "error",
+  // Disallow `require()` statements except in import statements.
+
+  "keyword-spacing": "warn",
+  // Enforce consistent spacing before and after keywords (e.g., `if`, `else`, `for`).
+
+  "@typescript-eslint/no-var-requires": "error",
+  // Disallow the use of `var`-style `require` imports in favor of `import` statements.
+
+  "@typescript-eslint/prefer-for-of": "error",
+  // Suggest using `for-of` loops instead of standard `for` loops when iterating over arrays.
+
+  "@typescript-eslint/prefer-function-type": "error",
+  // Enforce the use of function types (`type MyFunction = (a: number) => string`) over interfaces with call signatures.
+
+  "@typescript-eslint/member-ordering": "off",
+  // Enforce a specific order for class members. Can be turned off or customized if needed.
+
+  "@typescript-eslint/no-angle-bracket-type-assertion": "off",
+  // Deprecated: Was used to disallow type assertions in the form of `<Type>value`. Use `as` syntax instead.
+
+  "@typescript-eslint/no-unnecessary-condition": "error",
+  // Warn about conditions that are always truthy or falsy.
+
+  "@typescript-eslint/no-confusing-non-null-assertion": "warn",
+  // Warn when a non-null assertion (`!`) is used in a potentially confusing way.
+
+  "@typescript-eslint/no-duplicate-enum-values": "error",
+  // Disallow duplicate enum member values.
+
+  "@typescript-eslint/no-empty-interface": "error",
+  // Disallow declaring empty interfaces.
+
+  "@typescript-eslint/no-unnecessary-type-assertion": "error",
+  // Disallow type assertions that do not change the type of an expression.
+
+  "@typescript-eslint/no-inferrable-types": "error",
+  // Disallow explicit type declarations for variables or parameters where the type can be easily inferred.
+
+  "@typescript-eslint/await-thenable": "error",
+  // Disallow awaiting non-Promise values.
+
+  "@typescript-eslint/ban-ts-comment": "error",
+  // Disallow `@ts-<directive>` comments that suppress TypeScript errors.
+
+  "@typescript-eslint/ban-tslint-comment": "error",
+  // Disallow `@tslint:<rule>` comments.
+
+  "@typescript-eslint/consistent-indexed-object-style": "error",
+  // Enforce a consistent style for defining index signatures (either `Record<K, V>` or `[key: K]: V`).
+
+    //      // 51. Enforces the use of object rest spread.
+    "prefer-object-spread": "error",
+  
+    // // 52. Disallows the use of leading or trailing underscores in variable names.
+    "no-underscore-dangle": "error",
+
+    // // 53. Enforces no redundant function calls.
+    "no-useless-call": "error",
+
+    // // 54. Disallows the use of `eval()` for code execution.
+    "no-eval": "error",
+
+    // // 56. Disallows the use of `arguments.callee`.
+    "no-caller": "error",
+
+    // // 58. Disallows creating functions in loops.
+    "no-loop-func": "warn",
+
+    // // 59. Enforces the use of `===` over `==`.
+    "eqeqeq": "error",
+
+    // // 61. Disallows `alert()`, `confirm()`, and `prompt()`.
+    "no-alert": "error",
+
+    // // 62. Requires that functions do not have unused parameters.
+    "no-unused-vars": "warn",
+
+    // // 63. Disallows the use of the `setTimeout()` and `setInterval()` functions.
+    "no-restricted-syntax": ["error", "CallExpression[callee.name='setTimeout']"],
+
+    // // 64. Requires the use of template literals when building strings.
+    "prefer-template": "error",
+
+    // // 66. Disallows the use of `debugger` in code.
+    "no-debugger": "error",
+
+    // // 67. Requires the use of single-line comments for short explanations.
+    "lines-around-comment": ["error", { "beforeBlockComment": true }],
+
+    // // 70. Requires the use of `import` statements for module loading.
+    "import/no-commonjs": "error",
+
+    // // 71. Requires an explicit return type for functions and methods.
+    "@typescript-eslint/explicit-function-return-type": "error",
+
+    // // 72. Disallows excessive usage of complex conditional expressions.
+    "no-unneeded-ternary": "error",
+
+    // // 73. Enforces the use of `const` for variables that are never reassigned.
+    "prefer-const": "error",
+
+    // // 74. Enforces that all switch statements have a `default` case.
+    "default-case": "warn",
+
+    // // 75. Disallows empty catch blocks.
+    "no-empty": "error",
+
+    // // 77. Requires the use of arrow functions for anonymous functions.
+    "prefer-arrow-callback": "error",
+
+    // // 78. Requires the use of `parseInt()` with the radix argument.
+    "radix": "error",
+
+    // 79. Requires variable names to be in camelCase.
+    "camelcase": "error",
+
+    // // 80. Enforces consistent function declarations for function expressions.
+    "func-names": "warn",
+
+    // // 82. Enforces the use of shorthand syntax for object properties.
+    "object-shorthand": "error",
+
+    // // 83. Requires all code to have a consistent number of empty lines.
+    "no-multiple-empty-lines": ["error", { "max": 1 }],
+
+    //spacing
+    "template-tag-spacing": ["error", "never"],
+
+    //enforce shorthand assignment
+    "operator-assignment": ["error", "always"],
+
+    //consistant quotes
+    "quotes": ["error", "single"],
+
+    //constant use of semi colans
+    "semi": ["error", "always"],
+
+    //semi spacing 
+    "semi-spacing": "error",
+
+    //end exp with semi on same line 
+    "semi-style": ["error", "last"],
+
+    //object creation consistency
+    "quote-props": ["error", "consistent"],
+
+    //sort vars variables
+    "sort-vars": ["error", { "ignoreCase": true }],
+
+    //space before blocks 
+    "space-before-blocks": "error",
+
+    //space in params
+    "space-in-parens": ["error", "never"],
+
+    //space between functionname and function keywords or parameters
+    "space-before-function-paren": "error",
+
+    //spacing in comments
+    "spaced-comment": ["error", "always", { "markers": ["/"] }],
+
+    // Enforce the use of braces around arrow function bodies
+    "arrow-body-style": ["error", "always"],
+
+    // Enforce the use of parentheses around arrow function arguments
+    "arrow-parens": ["error", "always"],
+
+    // Enforce consistent spacing before and after the arrow in arrow functions
+    "arrow-spacing": ["error", { "before": true, "after": true }],
+
+    // Require super() calls in constructors of derived classes
+    "constructor-super": "error",
+
+    // Enforce consistent spacing around `*` operators in generator functions
+    "generator-star-spacing": ["error", { "before": false, "after": true }],
+
+    // Disallow reassigning class members
+    "no-class-assign": "error",
+
+    // Disallow arrow functions where they could be confused with comparisons
+    "no-confusing-arrow": ["error", { "allowParens": true }],
+
+    // Disallow reassigning `const` variables
+    "no-const-assign": "error",
+
+    // Disallow duplicate class members
+    "no-dupe-class-members": "error",
+
+    // Disallow duplicate module imports
+    "no-duplicate-imports": "error",
+
+    // Disallow `new` operators with the Symbol object
+    "no-new-symbol": "error",
+
+    // Disallow specified modules when loaded by import
+    "no-restricted-imports": ["error", { "paths": ["lodash"] }],
+
+    // Disallow `this` or `super` before calling `super()` in constructors
+    "no-this-before-super": "error",
+
+    // Disallow unnecessary computed property keys in object literals
+    "no-useless-computed-key": "error",
+
+      // Disallow renaming import, export, and destructured assignments to the same name
+    "no-useless-rename": "error",
+
+    // Require `let` or `const` instead of `var`
+    "no-var": "error",
+
+     // Disallow `parseInt()` and `Number.parseInt()` in favor of binary, octal, and hexadecimal literals
+    "prefer-numeric-literals": "error",
+
+    // Require rest parameters instead of `arguments`
+    "prefer-rest-params": "error",
+
+    // Require spread operators instead of `.apply()`
+    "prefer-spread": "error",
+
+    // Require generator functions to contain `yield`
+    "require-yield": "error",
+
+    // Enforce spacing between rest and spread operators and their expressions
+    "rest-spread-spacing": ["error", "never"],
+
+    // Require symbol descriptions
+    "symbol-description": "error",
+
+    // Require or disallow spacing around embedded expressions of template strings
+    "template-curly-spacing": ["error", "never"],
+
+    // Require or disallow spacing around the `*` in `yield*` expressions
+    "yield-star-spacing": ["error", { "before": false, "after": true }],
+
+       // Prevent unused expressions (e.g., in statements that don't do anything).
+       "no-unused-expressions": "error",
+
+       // Prevent variable redeclaration.
+       "no-redeclare": "error",
+   
+       // Disallow labeled statements (e.g., break/continue with labels).
+       "no-labels": "error",
+   
+       // Disallow empty destructuring patterns.
+       "no-empty-pattern": "error",
+   
+       // Prevent unsafe 'finally' blocks.
+       "no-unsafe-finally": "error",
+   
+       // Disallow variable shadowing.
+       "no-shadow": "error",
+   
+       // Disallow the use of new object literals (e.g., `new Object()`).
+       "no-new-object": "error",
+   
+       // Disallow assignment of a variable to itself.
+       "no-self-assign": "error",
+   
+       // Warn against the use of the `continue` statement.
+       "no-continue": "warn",
+   
+       // Warn against the usage of "magic numbers" (literal numbers without explanation).
+       "no-magic-numbers": "warn",
+   
+       // Disallow an else block after a return statement in the if block.
+       "no-else-return": "error",
+   
+       // Disallow multiple assignments in a single statement.
+       "no-multi-assign": "error",
+   
+       // Disallow unnecessary block-level code, like `if(true) {}`.
+       "no-lone-blocks": "error",
+   
+       // Prevent fallthrough behavior in switch cases (missing `break`).
+       "no-fallthrough": "error",
+   
+       // Disallow extending native objects (e.g., `Object.prototype`).
+       "no-extend-native": "error",
+   
+       // Disallow the use of wrapper objects (e.g., `new String()`).
+       "no-new-wrappers": "error",
+   
+       // Disallow the use of `with` statements.
+       "no-with": "error",
+   
+       // Prevent comparisons with `null` without type checking.
+       "no-eq-null": "error",
+   
+       // Prevent the use of `new Function()` which can introduce security risks.
+       "no-new-func": "error",
+   
+       // Disallow `new` operators with the `require` statement.
+       "no-new-require": "error",
+   
+   
+       // Enforce consistent variable names for `this`.
+       "consistent-this": ["error", "self"],
+   
+       // Disallow unnecessary `catch` blocks.
+       "no-useless-catch": "error",
+   
+       // Disallow the initialization of variables to `undefined`.
+       "no-undef-init": "error",
+   
+       // Warn against the use of `console` statements.
+       "no-console": "warn",
+   
+       // Disallow `await` inside a `return` statement.
+       "no-return-await": "error",
+   
+   
+       // Require the use of curly braces for all control structures (if, for, etc.).
+       "curly": "error",
+   
+       // Disallow extra semicolons at the end of statements.
+       "no-extra-semi": "error",
+   
+       // Enforce a maximum line length (120 characters).
+       "max-len": ["error", { "code": 120 }],
+   
+       // Enforce the use of `return` in array callback functions.
+       "array-callback-return": "error",
+   
+       // Warn against reassignment of function parameters.
+       "no-param-reassign": "warn",
+   
+       // Enforce that all switch statements have a default case.
+       "default-case-last": "error",
+   
+   
+       // Warn against constant conditions (e.g., `while (true)`).
+       "no-constant-condition": "warn",
+   
+       // Warn against empty functions (i.e., functions with no logic).
+       "no-empty-function": "warn",
+   
+       // Disallow shadowing of restricted names like `arguments`, `eval`, etc.
+       "no-shadow-restricted-names": "error",
+   
+       // Enforce consistent object curly brace style (consistent positioning).
+       "object-curly-newline": ["error", { "consistent": true }],
+   
+       // Enforce spaces inside curly braces for objects.
+       "object-curly-spacing": ["error", "always"]
+
+
+  }
+}
