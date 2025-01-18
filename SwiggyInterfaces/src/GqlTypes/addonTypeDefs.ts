@@ -3,7 +3,7 @@ import { gql } from 'apollo-server';
 export const AddonTypeDefs = gql`
  
   type Addon {
-    id: ID!
+    id: Int
     name: String!
     description: String
     price : JSON

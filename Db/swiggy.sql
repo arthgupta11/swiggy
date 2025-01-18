@@ -25,7 +25,7 @@ CREATE TABLE `subcategories` (
   `created_at` timestamp NOT NULL,
   `modified_at` timestamp,
   `is_deleted` boolean NOT NULL,
-  `restruant_id` integer NOT NULL,
+  `restraunt_id` integer NOT NULL,
   `deleted_at` timestamp,
   `category_id` integer NOT NULL
 );
@@ -73,7 +73,7 @@ CREATE TABLE `product_categories` (
   `modified_at` timestamp,
   `is_deleted` boolean NOT NULL,
   `deleted_at` timestamp,
-  `restruant_id` integer NOT NULL
+  `restraunt_id` integer NOT NULL
 );
 
 CREATE TABLE `category_subcategories` (
@@ -84,7 +84,7 @@ CREATE TABLE `category_subcategories` (
   `modified_at` timestamp,
   `is_deleted` boolean NOT NULL,
   `deleted_at` timestamp,
-  `restruant_id` integer NOT NULL
+  `restraunt_id` integer NOT NULL
 );
 
 CREATE TABLE `product_subcategories` (
@@ -95,7 +95,7 @@ CREATE TABLE `product_subcategories` (
   `modified_at` timestamp,
   `is_deleted` boolean NOT NULL,
   `deleted_at` timestamp,
-  `restruant_id` integer NOT NULL
+  `restraunt_id` integer NOT NULL
 );
 
 CREATE TABLE `products_recommended_products` (
@@ -106,24 +106,24 @@ CREATE TABLE `products_recommended_products` (
   `created_at` timestamp NOT NULL,
   `modified_at` timestamp,
   `is_deleted` boolean NOT NULL,
-  `restruant_id` integer NOT NULL
+  `restraunt_id` integer NOT NULL
 );
 
 ALTER TABLE `categories` ADD FOREIGN KEY (`restraunt_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `subcategories` ADD FOREIGN KEY (`restruant_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `subcategories` ADD FOREIGN KEY (`restraunt_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 ALTER TABLE `products` ADD FOREIGN KEY (`restraunt_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 ALTER TABLE `addons` ADD FOREIGN KEY (`restraunt_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `product_categories` ADD FOREIGN KEY (`restruant_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `product_categories` ADD FOREIGN KEY (`restraunt_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `category_subcategories` ADD FOREIGN KEY (`restruant_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `category_subcategories` ADD FOREIGN KEY (`restraunt_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `product_subcategories` ADD FOREIGN KEY (`restruant_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `product_subcategories` ADD FOREIGN KEY (`restraunt_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
-ALTER TABLE `products_recommended_products` ADD FOREIGN KEY (`restruant_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
+ALTER TABLE `products_recommended_products` ADD FOREIGN KEY (`restraunt_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 
 ALTER TABLE `product_addons` ADD FOREIGN KEY (`restraunt_id`) REFERENCES `restraunts` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION;
 

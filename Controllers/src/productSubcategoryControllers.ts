@@ -17,6 +17,7 @@ export class ProductSubcategoriesController {
       return sendServerError(error);
     }
   };
+  
 
   getAllProductSubcategories = async (): Promise<IProductSubcategory[] | IErrorResponse> => {
     try {
@@ -41,6 +42,7 @@ export class ProductSubcategoriesController {
       restrauntId: number;
     }
   ): Promise<IProductSubcategory | IErrorResponse> => {
+    console.log(id)
     try {
       const response = await ProductSubcategories.create({
         id: id,
@@ -103,3 +105,4 @@ export class ProductSubcategoriesController {
     }
   };
 }
+  

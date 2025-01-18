@@ -10,10 +10,8 @@ const server = new ApolloServer({
 const startServer = async () : Promise<string> => {
   const { url } = await server.listen();
   return `Server ready at ${url}`;
-};
- 
-console.log(startServer()); 
-     
-            
-          
- 
+}; 
+console.log(startServer());  
+                   
+                 
+                      

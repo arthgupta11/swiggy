@@ -3,7 +3,7 @@ import { gql } from 'apollo-server';
 export const ProductSubcategoryTypeDefs = gql`
  
   type ProductSubcategory {
-    id: ID!
+    id: Int
     productId: Int
     subcategoryId: Int
     createdAt: String
@@ -12,7 +12,7 @@ export const ProductSubcategoryTypeDefs = gql`
     isDeleted: Boolean!
   }
   type Query {
-   getProductSubcategory: [ProductSubcategory]
+   getProductSubcategories: [ProductSubcategory]
    getAllProductSubcategories: [ProductSubcategory]
   }
   type Mutation {

@@ -4,7 +4,7 @@ export const ProductTypeDefs = gql`
   scalar JSON
   
   type Product {
-    id: ID!
+    id: Int
     name: String!
     price: JSON
     description: String

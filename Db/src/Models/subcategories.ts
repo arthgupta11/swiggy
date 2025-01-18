@@ -30,7 +30,7 @@ export default class Subcategories extends BaseModel {
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field: 'restruant_id'
+    field: 'restraunt_id'
   })
   public restrauntId!: number;
 }

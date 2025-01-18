@@ -1,5 +1,6 @@
 import GraphQLJSON from 'graphql-type-json';
-import {categoryController, productController, restrauntsController, subcategoryController, addonController, productCategoryController, productAddonController, productRecommendedProductsController }from 'Controllers/src';
+import {categoryController, productController, restrauntsController, subcategoryController, addonController, productCategoryController, productAddonController, productRecommendedProductsController, productSubcategoryController }from 'Controllers/src';
+import { ProductSubcategoriesController } from 'Controllers/src/productSubcategoryControllers';
 
 
 
@@ -8,9 +9,11 @@ export const resolvers = {
   JSON: GraphQLJSON,
 
     Query: {
+      getAllNestedData: restrauntsController.nestedFetchAllData,
       getRestraunts: restrauntsController.getRestraunts,
       getAllRestraunts: restrauntsController.getAllRestraunts,
-
+      getAllData: restrauntsController.fetchAllData,
+       
       getCategories: categoryController.getCategories,
       getAllCategories: categoryController.getAllCategories,
 
@@ -22,12 +25,15 @@ export const resolvers = {
 
       getAddons: addonController.getAddons,
       getAllAddons: addonController.getAllAddons,
-
+ 
       getProductCategories: productCategoryController.getProductCategories,
       getAllProductCategories: productCategoryController.getAllProductCategories,
 
       getProductAddons: productAddonController.getProductAddons,
       getAllProductAddons: productAddonController.getAllProductAddons,
+
+      getProductSubcategories: productSubcategoryController.getProductSubcategories,
+      getAllProductSubcategories: productSubcategoryController.getAllProductSubcategories,
       
       getRecommendedProducts: productRecommendedProductsController.getProductRecommendedProducts,
       getAllRecommendedProducts: productRecommendedProductsController.getAllProductRecommendedProducts,
@@ -61,8 +67,13 @@ export const resolvers = {
      softDeleteProductAddon: productAddonController.softDeleteProductAddon,
      updateProductAddon: productAddonController.updateProductAddon,
 
+     addProductSubcategory : productSubcategoryController.addProductSubcategory,
+     softDeleteProductSubcategory: productSubcategoryController.softDeleteProductSubcategory,
+     updateProductSubcategory : productSubcategoryController.updateProductSubcategory,
+      
      addRecommendedProduct: productRecommendedProductsController.addProductRecommendedProduct,
      softDeleteRecommendedProduct: productRecommendedProductsController.softDeleteProductRecommendedProduct,
      updateRecommendedProduct: productRecommendedProductsController.updateProductRecommendedProduct,
-   }
+    
+    }
 }; 

@@ -23,7 +23,7 @@ export default class Categories extends BaseModel {
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field:'restraunt_id'
+    field: 'restraunt_id'
   })
   public restrauntId!: number;
 

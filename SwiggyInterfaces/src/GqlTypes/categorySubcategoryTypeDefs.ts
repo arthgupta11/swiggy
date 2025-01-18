@@ -3,7 +3,7 @@ import { gql } from 'apollo-server';
 export const CategorySubcategoryTypeDefs = gql`
  
   type CategorySubcategory {
-    id: ID!
+    id: Int
     categoryId: Int
     subcategoryId: Int
     createdAt: String

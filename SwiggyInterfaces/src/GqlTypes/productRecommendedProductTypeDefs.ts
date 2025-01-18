@@ -3,7 +3,7 @@ import { gql } from 'apollo-server';
 export const ProductRecommendedProductTypeDefs = gql`
  
   type ProductRecommendedProduct {
-    id: ID!
+    id: Int
     productId: Int
     recommendedProductId: Int
     createdAt: String

@@ -33,3 +33,4 @@ export default class Addons extends BaseModel {
   })
   public restrauntId!: number;
 }
+
