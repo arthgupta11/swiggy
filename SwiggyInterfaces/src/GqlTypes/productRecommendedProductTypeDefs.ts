@@ -18,6 +18,7 @@ export const ProductRecommendedProductTypeDefs = gql`
   type Mutation {
     addRecommendedProduct( productId: Int, recommendedProductId: Int, restrauntId: Int): ProductRecommendedProduct
     softDeleteRecommendedProduct(id: Int): String
+    
     updateRecommendedProduct(id: Int!, productId: Int, recommendedProduct: Int, restrauntId: Int): String
   }
 `;

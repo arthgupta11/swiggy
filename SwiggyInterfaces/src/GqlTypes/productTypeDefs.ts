@@ -26,6 +26,8 @@ export const ProductTypeDefs = gql`
   type Mutation {
     addProduct( name: String, description: String,price: [PriceInput], restrauntId: Int): Product
     softDeleteProduct(id: Int): String
+    hardDeleteProduct(id: Int): String
+    DeleteProduct(id: Int): String
     updateProduct(id: Int!, name: String, description: String,price: JSON , restrauntId: Int): String
   }
 `;

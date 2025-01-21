@@ -1,5 +1,5 @@
 // subcategoriesController.ts
-import { ProductSubcategories, Subcategories, sequelize } from 'Db/src';
+import { Categories, ProductSubcategories, Restraunts, Subcategories, sequelize } from 'Db/src';
 import { ISubcategory } from 'SwiggyInterfaces/src';
 import { IErrorResponse } from './Responses/errorResponseSchema';
 import { sendClientError, sendServerError } from './_helpers/sendError';
@@ -46,6 +46,22 @@ export class SubcategoriesController {
     }
   ): Promise<ISubcategory | IErrorResponse> => {
     try {
+       const restaurant = await Restraunts.findOne({
+              where: {
+                id: restrauntId,
+                isDeleted: false,  // Only allow active restaurants
+              },
+         });
+        const category = await Categories.findOne({
+          where: {
+            category_id: categoryId,
+            isDeleted: false,  // Only allow active restaurants
+          },
+         });
+          if (!restaurant || !category) {
+              sendClientError('Cannot add category to a deleted or non-existent restaurant');
+         }
+         
       const data = {
         id: await getMaxId(Subcategories),
         name: name,
@@ -67,7 +83,31 @@ export class SubcategoriesController {
       return sendServerError(error);
     }
   };
+hardDeleteSubcategory = async ( _: unknown, {id}: {id: number}):Promise<String | IErrorResponse> =>{
+    const t = await sequelize.transaction()
 
+    try {
+     
+      await Subcategories.destroy(
+        { where: { id: id },
+        force: true,
+        transaction: t }
+      );
+    
+      await ProductSubcategories.destroy(
+        { where: { id: id },
+        force: true,
+        transaction: t }
+      );
+      
+   
+    // Commit transaction
+    await t.commit();
+      return `Subcategory and its mapping  of id -> ${id} deleted succcessfully`;
+    } catch (error) {
+      return sendServerError(error);
+    }
+  }
   softDeleteSubcategory = async (
     _: unknown,
     { id }: { id: number }

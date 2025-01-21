@@ -1,4 +1,4 @@
-import   Joi from 'joi';
+import Joi from 'joi';
 
 const priceSchema = Joi.object({
     priceKey: Joi.string().min(3).max(10).required().messages({
@@ -13,8 +13,6 @@ const priceSchema = Joi.object({
       'any.required': '"priceValue" is required',
     }),
   });
-  
- 
 
 export const ValidateSchema = Joi.object({
     id : Joi.number()
@@ -32,4 +30,4 @@ export const ValidateSchema = Joi.object({
     categoryId : Joi.number()
      ,
     restrauntId: Joi.number()
-})
+});

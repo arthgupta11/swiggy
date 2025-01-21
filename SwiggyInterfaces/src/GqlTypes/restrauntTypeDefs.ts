@@ -155,65 +155,37 @@ type NestedProduct {
   restrauntId: Int
   deletedAt: String
   isDeleted: Boolean!
-  addons: [Addon]
-  recommendedproducts: [NestedProduct]
+  addons: [AddonInProduct]
+  recommendedproducts: [RecommendedProductInProduct]
 }
 
-
-type SqlFilteredData {
-  id: Int!
+type AddonInProduct {
+  id: ID!
   name: String!
-  createdAt: String
-  modifiedAt: String
-  deletedAt: String
-  isDeleted: Boolean!
-  categories: [FilteredCategory]
-  products: [FilteredProduct]
-  addons: [Addon]
-  productCategories: [ProductCategory]
-  productSubcategories: [ProductSubcategory]
-  productAddons: [ProductAddon]
-  productRecommendedProducts: [ProductRecommendedProduct]
-}
-
-type FilteredCategory {
-  id: Int!
-  name: String!
-  description: String
-  createdAt: String
-  modifiedAt: String
-  restrauntId: Int
-  deletedAt: String
-  isDeleted: Boolean!
-  subcategories: [FilteredSubcategory]
-}
-
-type FilteredSubcategory {
-  id: Int!
-  name: String!
-  description: String
-  createdAt: String
-  modifiedAt: String
-  categoryId: Int
-  restrauntId: Int
-  deletedAt: String
-  isDeleted: Boolean!
-  products: [FilteredProduct]
-}
-
-type FilteredProduct {
-  id: Int!
-  name: String!
-  description: String
   price: JSON
   createdAt: String
   modifiedAt: String
-  restrauntId: Int
   deletedAt: String
   isDeleted: Boolean!
-  addons: [Addon]
-  recommendedProducts: [FilteredProduct]
-} 
+  description: String
+  restrauntId: Int
+
+}
+
+type RecommendedProductInProduct {
+  id: ID!
+  name: String!
+  price: JSON
+  createdAt: String
+  modifiedAt: String
+  deletedAt: String
+  isDeleted: Boolean!
+  description: String
+  restrauntId: Int
+  addons: [Addon] 
+  recommendedproducts: [Product] 
+}
+
   type ErrorRes{
   status: Int
   error: String
@@ -224,7 +196,7 @@ type FilteredProduct {
   
 
   type Query {
-   getSqlFilteredData(id: Int): SqlFilteredData
+
    getAllNestedData(id : Int): NestedRestrauntData
    getRestraunts: [Restraunt]
    getAllRestraunts : [Restraunt]
@@ -233,7 +205,9 @@ type FilteredProduct {
 
    type Mutation{
      addRestraunt( name: String): Restraunt
-     softDeleteRestraunt( id: Int): String   
+     softDeleteRestraunt( id: Int): String  
+     DeleteRestraunt( id: Int): String  
+     hardDeleteRestraunt( id: Int): String  
      updateRestraunt(id: Int, name: String): String
    }
 `;

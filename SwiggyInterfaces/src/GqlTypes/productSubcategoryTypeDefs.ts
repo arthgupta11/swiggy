@@ -18,6 +18,7 @@ export const ProductSubcategoryTypeDefs = gql`
   type Mutation {
     addProductSubcategory( productId: Int, subcategoryId: Int, restrauntId: Int): ProductSubcategory
     softDeleteProductSubcategory(id: Int): String
+   
     updateProductSubcategory(id: Int!, productId: Int, subcategoryId: Int, restrauntId: Int): String
   }
 `;

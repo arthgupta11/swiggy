@@ -1,5 +1,5 @@
 // ProductsController.ts
-import { Products } from 'Db/src';
+import { ProductAddons, ProductCategories, ProductRecommendedProducts, Products ,  ProductSubcategories,  Restraunts,  sequelize,} from 'Db/src';
 import { IProduct } from 'SwiggyInterfaces/src';
 import { IErrorResponse } from './Responses/errorResponseSchema';
 import { sendClientError, sendServerError } from './_helpers/sendError';
@@ -48,6 +48,16 @@ export class ProductsController {
     }
   ): Promise<IProduct | IErrorResponse> => {
     try {
+       const restaurant = await Restraunts.findOne({
+              where: {
+                id: restrauntId,
+                isDeleted: false,  // Only allow active restaurants
+              },
+            });
+            
+            if (!restaurant) {
+              sendClientError('Cannot add category to a deleted or non-existent restaurant');
+            }
       if (containsDuplicate(price) == false){
           let data = {
             id: await getMaxId(Products),
@@ -80,16 +90,79 @@ export class ProductsController {
     }
   };
 
+  
+hardDeleteProduct = async ( _: unknown, {id}: {id: number}):Promise<String | IErrorResponse> =>{
+    const t = await sequelize.transaction()
+
+    try {
+     
+      await Products.destroy(
+        { where: { id: id },
+        force: true,
+        transaction: t }
+      );
+
+      await ProductRecommendedProducts.destroy(
+        { where: { recommended_productid: id },
+        force: true,
+        transaction: t }
+      );
+      
+      const tables = [ProductCategories, ProductSubcategories, ProductAddons, ProductRecommendedProducts]
+      await Promise.all(
+        tables.map((model: any) =>
+          model.destroy(
+            { where: { product_id: id },
+            force: true,
+            transaction: t }
+          )
+        )
+      );
+
+      
+      
+   
+    // Commit transaction
+    await t.commit();
+      return `Product and its mapping of id -> ${id} deleted succcessfully`;
+    } catch (error) {
+      return sendServerError(error);
+    }
+  }
+
   softDeleteProduct = async (
     _: unknown,
     { id }: { id: number }
   ): Promise<String | IErrorResponse> => {
+
+    const t = await sequelize.transaction()
+
     try {
-      const response = await Products.update(
-        { isDeleted: true, deletedAt: new Date() },
-        { where: { id: id }, returning: true }
-      );
-      return 'Item deleted succcessfully';
+         await Products.update(
+             {  isDeleted: true, deletedAt: new Date()  },
+             { where: { id: id }, transaction: t }
+           );
+
+        await ProductRecommendedProducts.update(
+            {  isDeleted: true, deletedAt: new Date()  },
+            { where: { recommended_productid: id }, transaction: t }
+          );
+            // List of tables to update
+         const tables = [ProductCategories, ProductSubcategories,  ProductAddons, ProductRecommendedProducts];
+     
+         // Execute updates in parallel using Promise.all
+         await Promise.all(
+           tables.map((model: any) =>
+             model.update(
+               {  isDeleted: true, deletedAt: new Date()  },
+               { where: { product_id: id }, transaction: t }
+             )
+           )
+         );
+     
+         // Commit transaction
+         await t.commit();
+      return `Product deleted of id--> ${id} succcessfully`;
     } catch (error) {
       return sendServerError(error);
     }

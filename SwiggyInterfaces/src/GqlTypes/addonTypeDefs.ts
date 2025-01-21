@@ -23,6 +23,10 @@ export const AddonTypeDefs = gql`
   type Mutation {
     addAddon( name: String, description: String,price: [PriceInput], restrauntId: Int): Addon
     softDeleteAddon(id: Int): String
+    hardDeleteAddon(id: Int): String
+    DeleteAddon(id: Int): String
+    
     updateAddon(id: Int!, name: String, description: String,price: JSON, restrauntId: Int): String
-  }
+  
+    }
 `;

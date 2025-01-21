@@ -1,0 +1,169 @@
+type SqlFilteredData {
+  id: Int!
+  name: String!
+  createdAt: String
+  modifiedAt: String
+  deletedAt: String
+  isDeleted: Boolean!
+  Categories: [FilteredCategory]
+  Products: [Product]
+}
+
+
+
+type FilteredCategory {
+  id: Int!
+  name: String!
+  description: String
+  createdAt: String
+  modifiedAt: String
+  restrauntId: Int
+  deletedAt: String
+  isDeleted: Boolean!
+  Subcategories: [FilteredSubcategory]
+  products: [FilteredProductInCategory]
+}
+
+type FilteredSubcategory {
+  id: Int!
+  name: String!
+  description: String
+  createdAt: String
+  modifiedAt: String
+  categoryId: Int
+  restrauntId: Int
+  deletedAt: String
+  isDeleted: Boolean!
+  products: [FilteredProductInSubcategory ]
+}
+
+type FilteredProductInCategory {
+  id: Int!
+  name: String!
+  description: String
+  price: JSON
+  createdAt: String
+  modifiedAt: String
+  restrauntId: Int
+  deletedAt: String
+  isDeleted: Boolean!
+  addons: [AddonInProduct]
+  recommendedProducts: [ProductWithProductRecommendedProducts]
+  ProductCategories: FilterProductCategories
+}
+
+type FilteredProductInSubcategory {
+  id: Int!
+  name: String!
+  description: String
+  price: JSON
+  createdAt: String
+  modifiedAt: String
+  restrauntId: Int
+  deletedAt: String
+  isDeleted: Boolean!
+  ProductSubcategories: [FilterProductSubcategories]
+   addons: [AddonInProduct]
+  recommendedProducts: [ProductWithProductRecommendedProducts]
+}
+type FilterProductSubcategories{
+      id: Int,
+      createdAt: String,
+      modifiedAt: String,
+      deletedAt: String,
+      isDeleted: Boolean!,
+      productId: Int,
+      subcategoryId: Int,
+      restrauntId: Int,
+      created_at: String,
+      modified_at: String,
+      restraunt_id: Int,
+      subcategory_id: Int,
+      product_id: Int
+}
+
+type AddonInProduct {
+    id: Int!
+    name: String!
+    price: JSON
+    createdAt: String
+    modifiedAt: String
+    restrauntId: Int
+    deletedAt: String
+    isDeleted: Boolean!
+    ProductAddons: FilterProductAddons
+
+}
+
+type RecommendationInProduct {
+    id: Int!
+    name: String!
+    price: JSON
+    createdAt: String
+    modifiedAt: String
+    restrauntId: Int
+    deletedAt: String
+    isDeleted: Boolean!
+    recommendedProducts: [ProductWithProductRecommendedProducts]
+}
+type ProductWithProductRecommendedProducts{
+     id: Int!
+    name: String!
+    description: String
+    price: JSON
+    createdAt: String
+    modifiedAt: String
+    restrauntId: Int
+    deletedAt: String
+    isDeleted: Boolean!
+    ProductRecommendedProducts: FilterProductRecommendedProducts
+}
+
+type FilterProductAddons{
+    id: Int,
+    createdAt: String,
+    modifiedAt: String,
+    deletedAt: String,
+    isDeleted: Boolean,
+    productId: Int,
+    addonId: Int,
+    restrauntId: Int,
+    created_at: String,
+    modified_at: String,
+    restraunt_id: Int,
+    product_id: Int,
+    addon_id: Int
+}
+type FilterProductRecommendedProducts {
+    id: Int,
+    createdAt: String,
+    modifiedAt: String,
+    deletedAt: String,
+    isDeleted: Boolean,
+    productId: Int,
+    recommendedProductId: Int,
+    restrauntId: Int,
+    created_at: String,
+    modified_at: String,
+    restraunt_id: Int,
+    product_id: Int,
+    recommended_productid: Int
+}
+
+type FilterProductCategories{
+      id: Int,
+      createdAt: String,
+      modifiedAt: String,
+      deletedAt: String,
+      isDeleted: Boolean!,
+      productId: Int,
+      categoryId: Int,
+      restrauntId: Int,
+      created_at: String,
+      modified_at: String,
+      restraunt_id: Int,
+      category_id: Int,
+      product_id: Int
+}
+
+   getSqlFilteredData(id: Int): SqlFilteredData

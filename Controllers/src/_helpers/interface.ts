@@ -1,4 +1,4 @@
-type TProduct = {
+interface TProduct {
   id: number;
   name: string;
   description: string;
@@ -10,9 +10,9 @@ type TProduct = {
   isDeleted: boolean;
   addons?: TAddon[];
   recommendedproducts?: TProduct[];
-};
+}
 
-type TAddon = {
+interface TAddon {
   id: number;
   name: string;
   description: string;
@@ -22,9 +22,9 @@ type TAddon = {
   restrauntId: number;
   deletedAt: string | null;
   isDeleted: boolean;
-};
+}
 
-type TSubcategory = {
+interface TSubcategory {
   id: number;
   name: string;
   description: string;
@@ -35,9 +35,9 @@ type TSubcategory = {
   deletedAt: string | null;
   isDeleted: boolean;
   products: TProduct[];
-};
+}
 
-type TCategory = {
+interface TCategory {
   id: number;
   name: string;
   description: string;
@@ -47,16 +47,16 @@ type TCategory = {
   deletedAt: string | null;
   isDeleted: boolean;
   Subcategories: TSubcategory[];
-};
+}
 
-type TRestrauntData = {
+interface TRestrauntData {
   id: number;
   name: string;
   Categories: TCategory[];
   Products: TProduct[];
-};
+}
 
-type TDataInput = {
+interface TDataInput {
   id: number;
   name: string;
   Categories: TCategory[];
@@ -70,7 +70,7 @@ type TDataInput = {
     recommendedProductId: number;
   }[];
   Addons: TAddon[];
-};
+}
 
 export {
   TAddon,

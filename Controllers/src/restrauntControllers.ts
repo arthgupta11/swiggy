@@ -41,10 +41,12 @@ export class RestrauntsController {
         Products.belongsToMany(Addons, {through: ProductAddons, foreignKey:'product_id', otherKey: 'addon_id'})
         Products.belongsToMany(Products, {
           through: ProductRecommendedProducts,
-          as: 'recommendedProducts',
+          as: 'relatedProducts',
           foreignKey: 'product_id',
           otherKey: 'recommended_productid'  
         });
+
+   
         
         const restraunts = await Restraunts.findOne({
           where: { id: id },
@@ -63,7 +65,7 @@ export class RestrauntsController {
                         },
                         {
                           model: Products,
-                          as: 'recommendedProducts'
+                          as: 'relatedProducts',
                         }
                       ]
                       
@@ -75,26 +77,18 @@ export class RestrauntsController {
                     {
                       model:Addons
                     }
-                    ,
-                    {
-                        model: Products,
-                        as: 'recommendedProducts'
-                    }
+                    
                   ]
                 }]
             }
             ,
-            Products,
-            Addons,
-            ProductCategories,
-            ProductSubcategories,
-            ProductAddons,
-            ProductRecommendedProducts,
+            Products
+           
           ],
         })
         console.log("req data")
         const response = restraunts?.get({ plain: true })
-        console.log(JSON.stringify(response))
+        console.log(JSON.stringify(response.Categories));
         return response
        }catch(error){
         sendServerError(error)
@@ -127,7 +121,8 @@ export class RestrauntsController {
       Subcategories.belongsTo(Categories, { foreignKey: 'category_id' });
 
       const restraunt = await Restraunts.findOne({
-        where: { id: id },
+        where: { id: id ,   isDeleted: false
+        },
         include: [
           {
             model: Categories,
@@ -144,8 +139,8 @@ export class RestrauntsController {
 
       const data: TDataInput = restraunt?.get({ plain: true });
       const response = transformData(data);
-
-      console.log(response);
+      console.log('DATAAAA',response.Categories[1].Subcategories[0].products);
+      // console.log(JSON.stringify(response));
       return response;
     } catch (error) {
       sendServerError(error);
@@ -192,7 +187,7 @@ export class RestrauntsController {
       });
 
       const response = restraunt?.get({ plain: true });
-      console.log(response);
+     
       return response;
     } catch (error) {
       sendServerError(error);
@@ -245,6 +240,27 @@ export class RestrauntsController {
       return sendServerError(error);
     }
   };
+
+  hardDeleteRestraunt = async ( _: unknown, {id}: {id: number}):Promise<String | IErrorResponse> =>{
+    const t = await sequelize.transaction()
+
+    try {
+     
+      await Restraunts.destroy(
+        { where: { id: id },
+        force: true,
+        transaction: t }
+      );
+
+      
+   
+    // Commit transaction
+    await t.commit();
+      return `Item of id -> ${id} deleted succcessfully`;
+    } catch (error) {
+      return sendServerError(error);
+    }
+  }
 
   softDeleteRestraunt = async (
     _: unknown,
