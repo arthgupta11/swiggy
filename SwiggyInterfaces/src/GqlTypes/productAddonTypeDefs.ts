@@ -16,7 +16,7 @@ export const ProductAddonTypeDefs = gql`
   getAllProductAddons: [ProductAddon]
   }
   type Mutation {
-    addProductAddon(id: Int, productId: Int, addonId: Int, restrauntId: Int): ProductAddon
+    addProductAddon( productId: Int, addonId: Int, restrauntId: Int): ProductAddon
     softDeleteProductAddon(id: Int): String
     updateProductAddon(id: Int!, productId: Int, addonId: Int, restrauntId: Int): String
   }

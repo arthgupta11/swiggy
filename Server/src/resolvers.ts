@@ -13,6 +13,7 @@ export const resolvers = {
       getRestraunts: restrauntsController.getRestraunts,
       getAllRestraunts: restrauntsController.getAllRestraunts,
       getAllData: restrauntsController.fetchAllData,
+      getSqlFilteredData: restrauntsController.getSqlFilteredData,
        
       getCategories: categoryController.getCategories,
       getAllCategories: categoryController.getAllCategories,

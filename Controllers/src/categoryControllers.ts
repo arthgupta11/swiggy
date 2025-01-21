@@ -1,8 +1,10 @@
 // categoriesController.ts
-import { Categories } from 'Db/src';
+import { Categories, ProductCategories, sequelize, Subcategories  } from 'Db/src';
 import { ICategory } from 'SwiggyInterfaces/src';
 import { IErrorResponse } from './Responses/errorResponseSchema';
-import { sendServerError } from './_helpers/sendError';
+import { sendClientError, sendServerError } from './_helpers/sendError';
+import { getMaxId } from './_helpers/getMaxId';
+import { ValidateSchema } from './_helpers/validator';
 
 export class CategoriesController {
   getCategories = async (): Promise<ICategory[] | IErrorResponse> => {
@@ -30,20 +32,29 @@ export class CategoriesController {
   addCategory = async (
     _: unknown,
     {
-      id,
+      
       name,
       description,
       restrauntId,
-    }: { id: number; name: string; description: string; restrauntId: number }
+    }: {  name: string; description: string; restrauntId: number }
   ): Promise<ICategory | IErrorResponse> => {
     try {
-      const response = await Categories.create({
-        id,
-        name,
-        description,
-        restrauntId,
-      });
-      return response.get({ plain: true }) as ICategory;
+      const data = {
+        id:await getMaxId(Categories),
+        name: name,
+        description: description,
+        restrauntId: restrauntId,
+      }
+       const validationResponse = ValidateSchema.validate(data)
+            if (validationResponse.error){
+              console.log(validationResponse.error)
+              return sendClientError('Incorrect datav validation failed')
+            }else{
+                 console.log(validationResponse)
+                 const response = await Categories.create(data);
+                 return response.get({ plain: true }) as ICategory;
+            }
+     
     } catch (error) {
       return sendServerError(error);
     }
@@ -53,11 +64,21 @@ export class CategoriesController {
     _: unknown,
     { id }: { id: number }
   ): Promise<String | IErrorResponse> => {
+    const t = await sequelize.transaction()
     try {
-      const response = await Categories.update(
-        { isDeleted: true, deletedAt: new Date() },
-        { where: { id: id }, returning: true }
-      );
+      await Categories.update(
+             { isDeleted: true, deletedAt: new Date() },
+             { where: { id: id }, transaction: t}
+           );
+     
+      
+       await Subcategories.update(
+             { isDeleted: true, deletedAt: new Date() },
+             { where: { category_id: id }, transaction: t}
+       )
+     
+            // Commit transaction
+         await t.commit();
       return 'Item deleted succcessfully';
     } catch (error) {
       return sendServerError(error);

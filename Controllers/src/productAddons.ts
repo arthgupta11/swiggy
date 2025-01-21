@@ -3,6 +3,7 @@ import { ProductAddons } from 'Db/src';
 import { IProductAddon } from 'SwiggyInterfaces/src';
 import { IErrorResponse } from './Responses/errorResponseSchema';
 import { sendServerError } from './_helpers/sendError';
+import { getMaxId } from './_helpers/getMaxId';
 
 export class ProductAddonsController {
   getProductAddons = async (): Promise<IProductAddon[] | IErrorResponse> => {
@@ -27,28 +28,29 @@ export class ProductAddonsController {
     }
   };
 
-  addProductAddon= async (
+  addProductAddon = async (
     _: unknown,
     {
-      id,
+     
       productId,
       addonId,
       restrauntId,
     }: {
-      id: number;
-      productId: number,
-      addonId: number,
+     
+      productId: number;
+      addonId: number;
       restrauntId: number;
     }
   ): Promise<IProductAddon | IErrorResponse> => {
-    console.log(productId)
+    console.log(productId);
     try {
-      const response = await ProductAddons.create({
-        id: id,
+      const data = {
+        id: await getMaxId(ProductAddons),
         productId: productId,
         addonId: addonId,
         restrauntId: restrauntId,
-      });
+      }
+      const response = await ProductAddons.create(data);
 
       return response.get({ plain: true }) as IProductAddon;
     } catch (error) {
@@ -75,8 +77,8 @@ export class ProductAddonsController {
     _: unknown,
     args: {
       id: number;
-      productId: number,
-      addonId: number,
+      productId: number;
+      addonId: number;
       restrauntId?: number;
     }
   ): Promise<string> => {

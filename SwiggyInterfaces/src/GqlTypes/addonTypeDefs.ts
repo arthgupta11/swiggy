@@ -1,7 +1,11 @@
 import { gql } from 'apollo-server';
 
 export const AddonTypeDefs = gql`
- 
+   input PriceInput {
+    priceKey: String!
+    priceValue: Int!
+  } 
+
   type Addon {
     id: Int
     name: String!
@@ -17,7 +21,7 @@ export const AddonTypeDefs = gql`
     getAllAddons: [Addon]
   }
   type Mutation {
-    addAddon(id: Int, name: String, description: String,price: JSON, restrauntId: Int): Addon
+    addAddon( name: String, description: String,price: [PriceInput], restrauntId: Int): Addon
     softDeleteAddon(id: Int): String
     updateAddon(id: Int!, name: String, description: String,price: JSON, restrauntId: Int): String
   }

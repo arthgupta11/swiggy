@@ -3,8 +3,7 @@ import { Column, DataType, Model } from 'sequelize-typescript';
 export default class BaseModel extends Model {
   @Column({
     type: DataType.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
+    primaryKey: true
   })
   public id!: number;
 

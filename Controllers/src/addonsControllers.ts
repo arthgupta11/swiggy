@@ -2,7 +2,10 @@
 import { Addons } from 'Db/src';
 import { IAddon } from 'SwiggyInterfaces/src';
 import { IErrorResponse } from './Responses/errorResponseSchema';
-import { sendServerError } from './_helpers/sendError';
+import { sendClientError, sendServerError } from './_helpers/sendError';
+import { getMaxId } from './_helpers/getMaxId';
+import { ValidateSchema } from './_helpers/validator';
+import { transformPriceArray } from './_helpers/transFormData';
 
 export class AddonsController {
   getAddons = async (): Promise<IAddon[] | IErrorResponse> => {
@@ -30,29 +33,41 @@ export class AddonsController {
   addAddon = async (
     _: unknown,
     {
-      id,
+    
       name,
       description,
       price,
       restrauntId,
     }: {
-      id: number;
+     
       name: string;
       description: string;
-      price: JSON;
+      //price: [{'priceKey':string, 'priceValue': number}];
+      price: any;
       restrauntId: number;
     }
   ): Promise<IAddon | IErrorResponse> => {
     try {
-      const response = await Addons.create({
-        id: id,
+      let data =  {
+        id:await getMaxId(Addons),
         name: name,
         description: description,
         price: price,
         restrauntId: restrauntId,
-      });
-
-      return response.get({ plain: true }) as IAddon;
+      }
+       const validationResponse = ValidateSchema.validate(data)
+            if (validationResponse.error){
+              console.log(validationResponse.error)
+              return sendClientError('Incorrect datav validation failed')
+            }else{
+                 console.log(validationResponse)
+                 data = {
+                                 ...data,  // Spread all existing properties
+                                 price: transformPriceArray(price)  // Update only the price field
+                               };
+                 const response = await Addons.create(data);
+                 return response.get({ plain: true }) as IAddon;
+            }
     } catch (error) {
       return sendServerError(error);
     }

@@ -3,25 +3,31 @@ import { ProductSubcategories } from 'Db/src';
 import { IProductSubcategory } from 'SwiggyInterfaces/src';
 import { IErrorResponse } from './Responses/errorResponseSchema';
 import { sendServerError } from './_helpers/sendError';
+import { getMaxId } from './_helpers/getMaxId';
 
 export class ProductSubcategoriesController {
-  getProductSubcategories = async (): Promise<IProductSubcategory[] | IErrorResponse> => {
+  getProductSubcategories = async (): Promise<
+    IProductSubcategory[] | IErrorResponse
+  > => {
     try {
-      const productSubcategories: IProductSubcategory[] = await ProductSubcategories.findAll({
-        where: {
-          isDeleted: false,
-        },
-      });
+      const productSubcategories: IProductSubcategory[] =
+        await ProductSubcategories.findAll({
+          where: {
+            isDeleted: false,
+          },
+        });
       return productSubcategories;
     } catch (error: unknown) {
       return sendServerError(error);
     }
   };
-  
 
-  getAllProductSubcategories = async (): Promise<IProductSubcategory[] | IErrorResponse> => {
+  getAllProductSubcategories = async (): Promise<
+    IProductSubcategory[] | IErrorResponse
+  > => {
     try {
-      const productSubcategories: IProductSubcategory[] = await ProductSubcategories.findAll();
+      const productSubcategories: IProductSubcategory[] =
+        await ProductSubcategories.findAll();
       return productSubcategories;
     } catch (error: unknown) {
       return sendServerError(error);
@@ -31,25 +37,27 @@ export class ProductSubcategoriesController {
   addProductSubcategory = async (
     _: unknown,
     {
-      id,
+    
       productId,
       subcategoryId,
       restrauntId,
     }: {
-      id: number;
-      productId: number,
-      subcategoryId: number,
+      
+      productId: number;
+      subcategoryId: number;
       restrauntId: number;
     }
   ): Promise<IProductSubcategory | IErrorResponse> => {
-    console.log(id)
+   
     try {
-      const response = await ProductSubcategories.create({
-        id: id,
+      const data = {
+        id: await getMaxId(ProductSubcategories),
         productId: productId,
         subcategoryId: subcategoryId,
         restrauntId: restrauntId,
-      });
+      }
+
+      const response = await ProductSubcategories.create(data);
 
       return response.get({ plain: true }) as IProductSubcategory;
     } catch (error) {
@@ -76,8 +84,8 @@ export class ProductSubcategoriesController {
     _: unknown,
     args: {
       id: number;
-      productId: number,
-      subcategoryId: number,
+      productId: number;
+      subcategoryId: number;
       restrauntId?: number;
     }
   ): Promise<string> => {
@@ -105,4 +113,3 @@ export class ProductSubcategoriesController {
     }
   };
 }
-  

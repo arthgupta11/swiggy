@@ -19,7 +19,7 @@ export const CategoryTypeDefs = gql`
    }
    
    type Mutation{
-     addCategory( id: Int, name: String, description: String, restrauntId: Int): Category
+     addCategory(  name: String, description: String, restrauntId: Int): Category
      softDeleteCategory( id: Int): String   
      updateCategory(id: Int, name: String): String
    }

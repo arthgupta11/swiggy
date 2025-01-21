@@ -2,7 +2,11 @@
 import { Products } from 'Db/src';
 import { IProduct } from 'SwiggyInterfaces/src';
 import { IErrorResponse } from './Responses/errorResponseSchema';
-import { sendServerError } from './_helpers/sendError';
+import { sendClientError, sendServerError } from './_helpers/sendError';
+import { getMaxId } from './_helpers/getMaxId';
+import { ValidateSchema } from './_helpers/validator';
+import { containsDuplicate } from './_helpers/containsDuplicates';
+import { transformPriceArray } from './_helpers/transFormData';
 
 export class ProductsController {
   getProducts = async (): Promise<IProduct[] | IErrorResponse> => {
@@ -23,14 +27,13 @@ export class ProductsController {
       const products: IProduct[] = await Products.findAll();
       return products;
     } catch (error: unknown) {
-      return sendServerError(error);
+          return sendServerError(error);
     }
   };
-
+  
   addProduct = async (
     _: unknown,
     {
-      id,
       name,
       description,
       price,
@@ -39,20 +42,39 @@ export class ProductsController {
       id: number;
       name: string;
       description: string;
-      price: JSON;
+      // price: [{'priceKey':string, 'priceValue': number}];
+      price: any,
       restrauntId: number;
     }
   ): Promise<IProduct | IErrorResponse> => {
     try {
-      const response = await Products.create({
-        id: id,
-        name: name,
-        description: description,
-        price: price,
-        restrauntId: restrauntId,
-      });
-
-      return response.get({ plain: true }) as IProduct;
+      if (containsDuplicate(price) == false){
+          let data = {
+            id: await getMaxId(Products),
+            name: name,
+            description: description,
+            price: price,
+            restrauntId: restrauntId,
+          }
+          console.log(data)
+          const validationResponse = ValidateSchema.validate(data)
+          if (validationResponse.error){
+            console.log(validationResponse.error)
+            return sendClientError('Incorrect data validation failed')
+          }else{
+               console.log(validationResponse)
+               data = {
+                ...data,  // Spread all existing properties
+                price: transformPriceArray(price)  // Update only the price field
+              };
+               const response = await Products.create(data);
+               return response.get({ plain: true }) as IProduct;
+          }
+      }else{
+        return sendClientError('duplicate price data not allowed')
+      }
+     
+      
     } catch (error) {
       return sendServerError(error);
     }

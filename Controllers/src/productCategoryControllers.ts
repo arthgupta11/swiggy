@@ -3,24 +3,31 @@ import { ProductCategories } from 'Db/src';
 import { IProductCategory } from 'SwiggyInterfaces/src';
 import { IErrorResponse } from './Responses/errorResponseSchema';
 import { sendServerError } from './_helpers/sendError';
+import { getMaxId } from './_helpers/getMaxId';
 
 export class ProductCategoriesController {
-  getProductCategories = async (): Promise<IProductCategory[] | IErrorResponse> => {
+  getProductCategories = async (): Promise<
+    IProductCategory[] | IErrorResponse
+  > => {
     try {
-      const productCategories: IProductCategory[] = await ProductCategories.findAll({
-        where: {
-          isDeleted: false,
-        },
-      });
+      const productCategories: IProductCategory[] =
+        await ProductCategories.findAll({
+          where: {
+            isDeleted: false,
+          },
+        });
       return productCategories;
     } catch (error: unknown) {
       return sendServerError(error);
     }
   };
 
-  getAllProductCategories = async (): Promise<IProductCategory[] | IErrorResponse> => {
+  getAllProductCategories = async (): Promise<
+    IProductCategory[] | IErrorResponse
+  > => {
     try {
-      const productCategories: IProductCategory[] = await ProductCategories.findAll();
+      const productCategories: IProductCategory[] =
+        await ProductCategories.findAll();
       return productCategories;
     } catch (error: unknown) {
       return sendServerError(error);
@@ -30,25 +37,27 @@ export class ProductCategoriesController {
   addProductCategory = async (
     _: unknown,
     {
-      id,
+      
       productId,
       categoryId,
       restrauntId,
     }: {
-      id: number;
-      productId: number,
-      categoryId: number,
+     
+      productId: number;
+      categoryId: number;
       restrauntId: number;
     }
   ): Promise<IProductCategory | IErrorResponse> => {
-    console.log(productId)
+    console.log(productId);
     try {
-      const response = await ProductCategories.create({
-        id: id,
+
+      const data= {
+        id:await getMaxId(ProductCategories),
         productId: productId,
         categoryId: categoryId,
         restrauntId: restrauntId,
-      });
+      }
+      const response = await ProductCategories.create(data);
 
       return response.get({ plain: true }) as IProductCategory;
     } catch (error) {
@@ -75,8 +84,8 @@ export class ProductCategoriesController {
     _: unknown,
     args: {
       id: number;
-      productId: number,
-      categoryId: number,
+      productId: number;
+      categoryId: number;
       restrauntId?: number;
     }
   ): Promise<string> => {

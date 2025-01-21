@@ -3,24 +3,31 @@ import { ProductRecommendedProducts } from 'Db/src';
 import { IProductReccommendedProduct } from 'SwiggyInterfaces/src';
 import { IErrorResponse } from './Responses/errorResponseSchema';
 import { sendServerError } from './_helpers/sendError';
+import { getMaxId } from './_helpers/getMaxId';
 
 export class ProductRecommendedProductsController {
-  getProductRecommendedProducts = async (): Promise<IProductReccommendedProduct[] | IErrorResponse> => {
+  getProductRecommendedProducts = async (): Promise<
+    IProductReccommendedProduct[] | IErrorResponse
+  > => {
     try {
-      const productProductRecommendedProducts: IProductReccommendedProduct[] = await ProductRecommendedProducts.findAll({
-        where: {
-          isDeleted: false,
-        },
-      });
+      const productProductRecommendedProducts: IProductReccommendedProduct[] =
+        await ProductRecommendedProducts.findAll({
+          where: {
+            isDeleted: false,
+          },
+        });
       return productProductRecommendedProducts;
     } catch (error: unknown) {
       return sendServerError(error);
     }
   };
 
-  getAllProductRecommendedProducts = async (): Promise<IProductReccommendedProduct[] | IErrorResponse> => {
+  getAllProductRecommendedProducts = async (): Promise<
+    IProductReccommendedProduct[] | IErrorResponse
+  > => {
     try {
-      const productProductRecommendedProducts: IProductReccommendedProduct[] = await ProductRecommendedProducts.findAll();
+      const productProductRecommendedProducts: IProductReccommendedProduct[] =
+        await ProductRecommendedProducts.findAll();
       return productProductRecommendedProducts;
     } catch (error: unknown) {
       return sendServerError(error);
@@ -30,25 +37,26 @@ export class ProductRecommendedProductsController {
   addProductRecommendedProduct = async (
     _: unknown,
     {
-      id,
+      
       productId,
       recommendedProductId,
       restrauntId,
     }: {
-      id: number;
-      productId: number,
-      recommendedProductId: number,
+    
+      productId: number;
+      recommendedProductId: number;
       restrauntId: number;
     }
   ): Promise<IProductReccommendedProduct | IErrorResponse> => {
-    console.log(productId)
+    console.log(productId);
     try {
-      const response = await ProductRecommendedProducts.create({
-        id: id,
+      const data = {
+        id: await getMaxId(ProductRecommendedProducts),
         productId: productId,
         recommendedProductId: recommendedProductId,
         restrauntId: restrauntId,
-      });
+      }
+      const response = await ProductRecommendedProducts.create(data);
 
       return response.get({ plain: true }) as IProductReccommendedProduct;
     } catch (error) {
@@ -75,8 +83,8 @@ export class ProductRecommendedProductsController {
     _: unknown,
     args: {
       id: number;
-      productId: number,
-      recommendedProductId: number,
+      productId: number;
+      recommendedProductId: number;
       restrauntId?: number;
     }
   ): Promise<string> => {
@@ -85,14 +93,18 @@ export class ProductRecommendedProductsController {
 
       // Dynamically populate updateData with only provided fields
       if (args.productId) updateData.productId = args.productId;
-      if (args.recommendedProductId) updateData.recommendedProductId = args.recommendedProductId;
+      if (args.recommendedProductId)
+        updateData.recommendedProductId = args.recommendedProductId;
       if (args.restrauntId) updateData.restrauntId = args.restrauntId;
       updateData.modifiedAt = new Date(); // Always update modifiedAt
 
-      const [affectedRows] = await ProductRecommendedProducts.update(updateData, {
-        where: { id: args.id },
-        returning: true,
-      });
+      const [affectedRows] = await ProductRecommendedProducts.update(
+        updateData,
+        {
+          where: { id: args.id },
+          returning: true,
+        }
+      );
 
       if (affectedRows === 0) {
         return 'No product recommendedProduct found with the provided ID';

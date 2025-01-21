@@ -1,102 +1,203 @@
 // RestrauntsController.ts
-import { Addons, Categories, ProductAddons, ProductCategories, ProductRecommendedProducts, Products, ProductSubcategories, Restraunts, sequelize, Subcategories } from 'Db/src';
+import {
+  Addons,
+  Categories,
+  ProductAddons,
+  ProductCategories,
+  ProductRecommendedProducts,
+  Products,
+  ProductSubcategories,
+  Restraunts,
+  sequelize,
+  Subcategories,
+} from 'Db/src';
+
 import { IRestraunt } from 'SwiggyInterfaces/src';
 import { IErrorResponse } from './Responses/errorResponseSchema';
-import { sendServerError } from './_helpers/sendError';
+import { sendClientError, sendServerError } from './_helpers/sendError';
 import { transformData } from './_helpers/transFormData';
 import { TDataInput } from './_helpers/interface';
-
+import { getMaxId } from './_helpers/getMaxId';
+import { ValidateSchema } from './_helpers/validator';
 
 export class RestrauntsController {
-  
-  nestedFetchAllData = async(_:unknown, {id}:{id: number}): Promise<unknown> =>{
-  try{
-    console.log("id------>", id)
-    Restraunts.hasMany(Categories, { foreignKey: 'restraunt_id' });
-
-    Restraunts.hasMany(ProductCategories, { foreignKey: 'restraunt_id' });
-    Restraunts.hasMany( ProductAddons, { foreignKey: 'restraunt_id' });
-    Restraunts.hasMany( ProductRecommendedProducts, { foreignKey: 'restraunt_id' });
-    Restraunts.hasMany( ProductSubcategories, { foreignKey: 'restraunt_id' });
-
-    Restraunts.hasMany(Subcategories, { foreignKey: 'restraunt_id' });
-    Restraunts.hasMany(Products, { foreignKey: 'restraunt_id' });
-    Restraunts.hasMany(Addons, { foreignKey: 'restraunt_id' });
-    Categories.hasMany(Subcategories, { foreignKey: 'category_id' });
-    // Subcategories.hasMany(Products,{foreignKey: ''} )
-    Categories.belongsTo(Restraunts, { foreignKey: 'restraunt_id' });
-    Subcategories.belongsTo(Categories, {foreignKey: 'category_id'})
-
-
-    const restraunt = await Restraunts.findOne({
-      where: { id: id },
-      include: [
-        {
-          model: Categories ,  
-        },
-        Subcategories,
-        Products,
-        Addons,
-        ProductCategories,
-        ProductSubcategories,
-        ProductAddons,
-        ProductRecommendedProducts
-      ],
-    });
-
-     const  data: TDataInput = restraunt?.get({ plain: true });
-     const response = transformData(data)
-
-     console.log(response)
-     return response
-
-}catch(error){
-  sendServerError(error)
-}
+  getSqlFilteredData = async (_:unknown, {id}: {id: number}
+  ): Promise<unknown> => {
+      console.log("id-->",id)
+       try{
+        Restraunts.hasMany(Categories, { foreignKey: 'restraunt_id' });
+        Restraunts.hasMany(Subcategories, { foreignKey: 'restraunt_id' });
+        Restraunts.hasMany(Products, { foreignKey: 'restraunt_id' });
+        Restraunts.hasMany(Addons, { foreignKey: 'restraunt_id' });
+        Restraunts.hasMany(ProductCategories, { foreignKey: 'restraunt_id' });
+        Restraunts.hasMany(ProductSubcategories, { foreignKey: 'restraunt_id' });
+        Restraunts.hasMany(ProductAddons, { foreignKey: 'restraunt_id' });
+        Restraunts.hasMany(ProductRecommendedProducts, {foreignKey: 'restraunt_id'});
+        
+        Categories.hasMany(Subcategories, { foreignKey: 'category_id' });
+        
+        Categories.belongsToMany(Products, {through: ProductCategories, foreignKey:'category_id', otherKey: 'product_id'})
+        Subcategories.belongsToMany(Products, {through: ProductSubcategories  , foreignKey:'subcategory_id', otherKey: 'product_id'} )
+        Products.belongsToMany(Addons, {through: ProductAddons, foreignKey:'product_id', otherKey: 'addon_id'})
+        Products.belongsToMany(Products, {
+          through: ProductRecommendedProducts,
+          as: 'recommendedProducts',
+          foreignKey: 'product_id',
+          otherKey: 'recommended_productid'  
+        });
+        
+        const restraunts = await Restraunts.findOne({
+          where: { id: id },
+          include: [
+            {
+              model: Categories,
+              include: [
+                {
+                   model: Subcategories,
+                   include: [
+                    {
+                      model: Products,
+                      include:[
+                        {
+                          model:Addons
+                        },
+                        {
+                          model: Products,
+                          as: 'recommendedProducts'
+                        }
+                      ]
+                      
+                    }]
+                },
+                {
+                  model:  Products,
+                  include:[
+                    {
+                      model:Addons
+                    }
+                    ,
+                    {
+                        model: Products,
+                        as: 'recommendedProducts'
+                    }
+                  ]
+                }]
+            }
+            ,
+            Products,
+            Addons,
+            ProductCategories,
+            ProductSubcategories,
+            ProductAddons,
+            ProductRecommendedProducts,
+          ],
+        })
+        console.log("req data")
+        const response = restraunts?.get({ plain: true })
+        console.log(JSON.stringify(response))
+        return response
+       }catch(error){
+        sendServerError(error)
+       }
   }
-  fetchAllData = async (_: unknown, {id}:{id: number}): Promise<unknown> =>{
-   console.log(id);
-   console.log("_________________________")
-    try{
-    Restraunts.hasMany(Categories, { foreignKey: 'restraunt_id' });
 
-    Restraunts.hasMany(ProductCategories, { foreignKey: 'restraunt_id' });
-    Restraunts.hasMany( ProductAddons, { foreignKey: 'restraunt_id' });
-    Restraunts.hasMany( ProductRecommendedProducts, { foreignKey: 'restraunt_id' });
-    Restraunts.hasMany( ProductSubcategories, { foreignKey: 'restraunt_id' });
 
-    Restraunts.hasMany(Subcategories, { foreignKey: 'restraunt_id' });
-    Restraunts.hasMany(Products, { foreignKey: 'restraunt_id' });
-    Restraunts.hasMany(Addons, { foreignKey: 'restraunt_id' });
-    Categories.hasMany(Subcategories, { foreignKey: 'category_id' });
-    // Subcategories.hasMany(Products,{foreignKey: ''} )
-    Categories.belongsTo(Restraunts, { foreignKey: 'restraunt_id' });
-    Subcategories.belongsTo(Categories, {foreignKey: 'category_id'})
 
-    const restraunt = await Restraunts.findOne({
-      where: { id: id },
-      include: [
-        {
-          model: Categories ,  
-        },
-        Subcategories,
-        Products,
-        Addons,
-        ProductCategories,
-        ProductSubcategories,
-        ProductAddons,
-        ProductRecommendedProducts
-      ],
-    });
+  nestedFetchAllData = async (
+    _: unknown,
+    { id }: { id: number }
+  ): Promise<unknown> => {
+    try {
+      console.log('id------>', id);
+      Restraunts.hasMany(Categories, { foreignKey: 'restraunt_id' });
 
-const response = restraunt?.get({ plain: true });
-console.log(response)
-return response
-   }catch(error){
-    sendServerError(error)
-   }
-   
-  }
+      Restraunts.hasMany(ProductCategories, { foreignKey: 'restraunt_id' });
+      Restraunts.hasMany(ProductAddons, { foreignKey: 'restraunt_id' });
+      Restraunts.hasMany(ProductRecommendedProducts, {
+        foreignKey: 'restraunt_id',
+      });
+      Restraunts.hasMany(ProductSubcategories, { foreignKey: 'restraunt_id' });
+
+      Restraunts.hasMany(Subcategories, { foreignKey: 'restraunt_id' });
+      Restraunts.hasMany(Products, { foreignKey: 'restraunt_id' });
+      Restraunts.hasMany(Addons, { foreignKey: 'restraunt_id' });
+      Categories.hasMany(Subcategories, { foreignKey: 'category_id' });
+      // Subcategories.hasMany(Products,{foreignKey: ''} )
+      Categories.belongsTo(Restraunts, { foreignKey: 'restraunt_id' });
+      Subcategories.belongsTo(Categories, { foreignKey: 'category_id' });
+
+      const restraunt = await Restraunts.findOne({
+        where: { id: id },
+        include: [
+          {
+            model: Categories,
+          },
+          Subcategories,
+          Products,
+          Addons,
+          ProductCategories,
+          ProductSubcategories,
+          ProductAddons,
+          ProductRecommendedProducts,
+        ],
+      });
+
+      const data: TDataInput = restraunt?.get({ plain: true });
+      const response = transformData(data);
+
+      console.log(response);
+      return response;
+    } catch (error) {
+      sendServerError(error);
+    }
+  };
+  fetchAllData = async (
+    _: unknown,
+    { id }: { id: number }
+  ): Promise<unknown> => {
+    console.log(id);
+    console.log('_________________________');
+    try {
+      Restraunts.hasMany(Categories, { foreignKey: 'restraunt_id' });
+
+      Restraunts.hasMany(ProductCategories, { foreignKey: 'restraunt_id' });
+      Restraunts.hasMany(ProductAddons, { foreignKey: 'restraunt_id' });
+      Restraunts.hasMany(ProductRecommendedProducts, {
+        foreignKey: 'restraunt_id',
+      });
+      Restraunts.hasMany(ProductSubcategories, { foreignKey: 'restraunt_id' });
+
+      Restraunts.hasMany(Subcategories, { foreignKey: 'restraunt_id' });
+      Restraunts.hasMany(Products, { foreignKey: 'restraunt_id' });
+      Restraunts.hasMany(Addons, { foreignKey: 'restraunt_id' });
+      Categories.hasMany(Subcategories, { foreignKey: 'category_id' });
+      // Subcategories.hasMany(Products,{foreignKey: ''} )
+      Categories.belongsTo(Restraunts, { foreignKey: 'restraunt_id' });
+      Subcategories.belongsTo(Categories, { foreignKey: 'category_id' });
+
+      const restraunt = await Restraunts.findOne({
+        where: { id: id },
+        include: [
+          {
+            model: Categories,
+          },
+          Subcategories,
+          Products,
+          Addons,
+          ProductCategories,
+          ProductSubcategories,
+          ProductAddons,
+          ProductRecommendedProducts,
+        ],
+      });
+
+      const response = restraunt?.get({ plain: true });
+      console.log(response);
+      return response;
+    } catch (error) {
+      sendServerError(error);
+    }
+  };
   getRestraunts = async (): Promise<IRestraunt[] | IErrorResponse> => {
     try {
       const restraunts: IRestraunt[] = await Restraunts.findAll({
@@ -121,15 +222,25 @@ return response
 
   addRestraunt = async (
     _: unknown,
-    input: IRestraunt
+    input: Partial<IRestraunt>
   ): Promise<IRestraunt | IErrorResponse> => {
     try {
-      const response = await Restraunts.create({
-        id: input.id,
+      const data = {
+        id: await getMaxId(Restraunts),
         name: input.name,
-      });
-
-      return response.get({ plain: true }) as IRestraunt;
+      }
+      console.log(data)
+      const validationResponse = ValidateSchema.validate(data)
+      if (validationResponse.error){
+        console.log(validationResponse.error)
+        return sendClientError('Incorrect datav validation failed')
+      }else{
+           console.log(validationResponse)
+           const response = await Restraunts.create(data);
+           return response.get({ plain: true }) as IRestraunt;
+      }
+      
+      
     } catch (error) {
       return sendServerError(error);
     }
@@ -139,12 +250,31 @@ return response
     _: unknown,
     { id }: { id: number }
   ): Promise<String | IErrorResponse> => {
+
+    const t = await sequelize.transaction()
+
     try {
-      const response = await Restraunts.update(
-        { isDeleted: true, deletedAt: new Date() },
-        { where: { id: id }, returning: true }
+     
+      await Restraunts.update(
+        {  isDeleted: true, deletedAt: new Date()  },
+        { where: { id: id }, transaction: t }
       );
-      return 'Item deleted succcessfully';
+       // List of tables to update
+    const tables = [Categories, Subcategories, Products, Addons];
+
+    // Execute updates in parallel using Promise.all
+    await Promise.all(
+      tables.map((model) =>
+        model.update(
+          {  isDeleted: true, deletedAt: new Date()  },
+          { where: { restraunt_id: id }, transaction: t }
+        )
+      )
+    );
+
+    // Commit transaction
+    await t.commit();
+      return `Item of id -> ${id} deleted succcessfully`;
     } catch (error) {
       return sendServerError(error);
     }
