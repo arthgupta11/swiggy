@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "start": "npx tsc && node dist/index.ts",
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon --exec ts-node src/index.ts",
     "pretty": "npx prettier --write src/**/*.{js,ts,json,html,css} ",
     "lint": "eslint src/**/*.ts  --fix ",
     "testlint": "eslint src/**/*.ts --fix",

@@ -1,7 +1,7 @@
 // AddonsController.ts
 import { Addons, ProductAddons, Restraunts, sequelize } from 'Db/src';
 import { IAddon } from 'SwiggyInterfaces/src';
-import { IErrorResponse } from './Responses/errorResponseSchema';
+import { IErrorResponse } from './Responses/errorResponseSchema.Responses';
 import { sendClientError, sendServerError } from './_helpers/sendError';
 import { getMaxId } from './_helpers/getMaxId';
 import { ValidateSchema } from './_helpers/validator';
@@ -33,13 +33,11 @@ export class AddonsController {
   addAddon = async (
     _: unknown,
     {
-    
       name,
       description,
       price,
       restrauntId,
     }: {
-     
       name: string;
       description: string;
       //price: [{'priceKey':string, 'priceValue': number}];
@@ -48,71 +46,78 @@ export class AddonsController {
     }
   ): Promise<IAddon | IErrorResponse> => {
     try {
+      const restaurant = await Restraunts.findOne({
+        where: {
+          id: restrauntId,
+          isDeleted: false, // Only allow active restaurants
+        },
+      });
 
-       const restaurant = await Restraunts.findOne({
-              where: {
-                id: restrauntId,
-                isDeleted: false,  // Only allow active restaurants
-              },
-            });
-            
-            if (!restaurant) {
-              sendClientError('Cannot add category to a deleted or non-existent restaurant');
-            }
+      if (!restaurant) {
+        sendClientError(
+          'Cannot add category to a deleted or non-existent restaurant'
+        );
+      }
 
-      let data =  {
-        id:await getMaxId(Addons),
+      let data = {
+        id: await getMaxId(Addons),
         name: name,
         description: description,
         price: price,
         restrauntId: restrauntId,
+      };
+      const validationResponse = ValidateSchema.validate(data);
+      if (validationResponse.error) {
+        console.log(validationResponse.error);
+        return sendClientError('Incorrect datav validation failed');
+      } else {
+        console.log(validationResponse);
+        data = {
+          ...data, // Spread all existing properties
+          price: transformPriceArray(price), // Update only the price field
+        };
+        const response = await Addons.create(data);
+        return response.get({ plain: true });
       }
-       const validationResponse = ValidateSchema.validate(data)
-            if (validationResponse.error){
-              console.log(validationResponse.error)
-              return sendClientError('Incorrect datav validation failed')
-            }else{
-                 console.log(validationResponse)
-                 data = {
-                                 ...data,  // Spread all existing properties
-                                 price: transformPriceArray(price)  // Update only the price field
-                               };
-                 const response = await Addons.create(data);
-                 return response.get({ plain: true }) as IAddon;
-            }
     } catch (error) {
       return sendServerError(error);
     }
   };
 
-  softDeleteAddon= async (_: unknown,{id}:{id: number}
-  ): Promise<String | IErrorResponse> =>{
+  softDeleteAddon = async (
+    _: unknown,
+    { id }: { id: number }
+  ): Promise<String | IErrorResponse> => {
     try {
       const response = await Addons.update(
         { isDeleted: true, deletedAt: new Date() },
         { where: { id: id }, returning: true }
       );
-      return 'Item deleted succcessfully';
+      console.log('MY RESPOHNSE',response);
+      if(response[1]){
+        return 'Item deleted succcessfully';
+      }else{
+        return sendClientError('item with given id not found')
+      }
+      // console.log(countrows)
+      // console.log(typeof(affectedrows))
+      // return 'Item deleted succcessfully';
     } catch (error) {
       return sendServerError(error);
     }
-  }
+  };
 
   hardDeleteAddon = async (
     _: unknown,
     { id }: { id: number }
   ): Promise<String | IErrorResponse> => {
-    const t = await sequelize.transaction()
+    const t = await sequelize.transaction();
 
     try {
-      await Addons.destroy(
-        { where: { id: id },force : true }
-      );
-      await ProductAddons.destroy(
-        { where: { addon_id: id },force : true }
-      )
+      await Addons.destroy({ where: { id: id }, force: true });
+      await ProductAddons.destroy({ where: { addon_id: id }, force: true });
       await t.commit();
-     
+
       return 'Item deleted succcessfully';
     } catch (error) {
       return sendServerError(error);

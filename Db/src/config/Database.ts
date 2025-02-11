@@ -9,7 +9,7 @@ import ProductSubcategories from '../Models/productSubcategories';
 import ProductAddons from '../Models/productAddons';
 import ProductRecommendedProducts from '../Models/productsRecommendedProducts';
 import CategorySubcategories from '../Models/categorySubcategories';
- // Import models here
+// Import models here
 
 const sequelize = new Sequelize({
   database: 'swiggy',
@@ -17,11 +17,18 @@ const sequelize = new Sequelize({
   username: 'root',
   password: '12345',
   models: [
-    Restraunts, Categories, Subcategories, Products, Addons, 
-    ProductCategories, ProductSubcategories,
-    ProductAddons, ProductRecommendedProducts,CategorySubcategories
-  ]
-    // Register your models
+    Restraunts,
+    Categories,
+    Subcategories,
+    Products,
+    Addons,
+    ProductCategories,
+    ProductSubcategories,
+    ProductAddons,
+    ProductRecommendedProducts,
+    CategorySubcategories,
+  ],
+  // Register your models
 });
 
 export default sequelize;

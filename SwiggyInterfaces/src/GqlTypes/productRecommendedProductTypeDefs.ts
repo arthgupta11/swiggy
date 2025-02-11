@@ -1,7 +1,6 @@
 import { gql } from 'apollo-server';
 
 export const ProductRecommendedProductTypeDefs = gql`
- 
   type ProductRecommendedProduct {
     id: Int
     productId: Int
@@ -12,13 +11,22 @@ export const ProductRecommendedProductTypeDefs = gql`
     isDeleted: Boolean!
   }
   type Query {
-   getRecommendedProducts: [ProductRecommendedProduct]
-   getAllRecommendedProducts: [ProductRecommendedProduct]
+    getRecommendedProducts: [ProductRecommendedProduct]
+    getAllRecommendedProducts: [ProductRecommendedProduct]
   }
   type Mutation {
-    addRecommendedProduct( productId: Int, recommendedProductId: Int, restrauntId: Int): ProductRecommendedProduct
+    addRecommendedProduct(
+      productId: Int
+      recommendedProductId: Int
+      restrauntId: Int
+    ): ProductRecommendedProduct
     softDeleteRecommendedProduct(id: Int): String
-    
-    updateRecommendedProduct(id: Int!, productId: Int, recommendedProduct: Int, restrauntId: Int): String
+
+    updateRecommendedProduct(
+      id: Int!
+      productId: Int
+      recommendedProduct: Int
+      restrauntId: Int
+    ): String
   }
 `;

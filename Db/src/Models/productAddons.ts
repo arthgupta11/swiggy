@@ -8,25 +8,24 @@ import BaseModel from './baseModel';
   updatedAt: 'modified_at',
 })
 export default class ProductAddons extends BaseModel {
-
   @Column({
-     type: DataType.INTEGER,
-     allowNull: false,
-     field: 'product_id'
-    })
-    public productId!: number;
+    type: DataType.INTEGER,
+    allowNull: false,
+    field: 'product_id',
+  })
+  public productId!: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field: 'addon_id'
-   })
-   public addonId!: number;
+    field: 'addon_id',
+  })
+  public addonId!: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field : 'restraunt_id'
+    field: 'restraunt_id',
   })
   public restrauntId!: number;
 }

@@ -8,25 +8,24 @@ import BaseModel from './baseModel';
   updatedAt: 'modified_at',
 })
 export default class ProductRecommendedProducts extends BaseModel {
-
   @Column({
-     type: DataType.INTEGER,
-     allowNull: false,
-     field : 'product_id'
-    })
-    public productId!: number;
+    type: DataType.INTEGER,
+    allowNull: false,
+    field: 'product_id',
+  })
+  public productId!: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field : 'recommended_productid'
-   })
-   public recommendedProductId!: number;
+    field: 'recommended_productid',
+  })
+  public recommendedProductId!: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field : 'restraunt_id'
+    field: 'restraunt_id',
   })
   public restrauntId!: number;
 }

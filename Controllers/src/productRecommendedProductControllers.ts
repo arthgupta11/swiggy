@@ -1,8 +1,8 @@
 // ProductRecommendedProductsController.ts
 import { ProductRecommendedProducts } from 'Db/src';
 import { IProductReccommendedProduct } from 'SwiggyInterfaces/src';
-import { IErrorResponse } from './Responses/errorResponseSchema';
-import { sendServerError } from './_helpers/sendError';
+import { IErrorResponse } from './Responses/errorResponseSchema.Responses';
+import { sendClientError, sendServerError } from './_helpers/sendError';
 import { getMaxId } from './_helpers/getMaxId';
 
 export class ProductRecommendedProductsController {
@@ -37,12 +37,10 @@ export class ProductRecommendedProductsController {
   addProductRecommendedProduct = async (
     _: unknown,
     {
-      
       productId,
       recommendedProductId,
       restrauntId,
     }: {
-    
       productId: number;
       recommendedProductId: number;
       restrauntId: number;
@@ -55,7 +53,7 @@ export class ProductRecommendedProductsController {
         productId: productId,
         recommendedProductId: recommendedProductId,
         restrauntId: restrauntId,
-      }
+      };
       const response = await ProductRecommendedProducts.create(data);
 
       return response.get({ plain: true }) as IProductReccommendedProduct;
@@ -73,7 +71,11 @@ export class ProductRecommendedProductsController {
         { isDeleted: true, deletedAt: new Date() },
         { where: { id: id }, returning: true }
       );
-      return 'Item deleted succcessfully';
+      if(response[1]){
+              return 'Item deleted succcessfully';
+            }else{
+              return sendClientError('item with given id not found')
+            }
     } catch (error) {
       return sendServerError(error);
     }

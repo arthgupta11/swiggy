@@ -1,5 +1,5 @@
 import sequelize from './config/Database';
-import Restraunts  from './Models/restraunts';
+import Restraunts from './Models/restraunts';
 import Addons from './Models/addOns';
 import Categories from './Models/categories';
 import CategorySubcategories from './Models/categorySubcategories';
@@ -9,19 +9,26 @@ import Products from './Models/products';
 import ProductRecommendedProducts from './Models/productsRecommendedProducts';
 import ProductSubcategories from './Models/productSubcategories';
 import Subcategories from './Models/subcategories';
-   
 
-sequelize.sync().then(() => {
-  console.log('Database connected');
-   
-}).catch((err: unknown) => {
-  console.error('Database connection error:', err);
-});
+sequelize
+  .sync()
+  .then(() => {
+    console.log('Database connected');
+  })
+  .catch((err: unknown) => {
+    console.error('Database connection error:', err);
+  });
 
 export {
-  Restraunts , Addons , Categories , 
-  CategorySubcategories ,ProductAddons,
-  ProductCategories, Products,
-  ProductRecommendedProducts, ProductSubcategories,
-  Subcategories, sequelize
+  Restraunts,
+  Addons,
+  Categories,
+  CategorySubcategories,
+  ProductAddons,
+  ProductCategories,
+  Products,
+  ProductRecommendedProducts,
+  ProductSubcategories,
+  Subcategories,
+  sequelize,
 };

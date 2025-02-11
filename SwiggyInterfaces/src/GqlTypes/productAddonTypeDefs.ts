@@ -1,7 +1,6 @@
 import { gql } from 'apollo-server';
 
 export const ProductAddonTypeDefs = gql`
- 
   type ProductAddon {
     id: Int
     productId: Int
@@ -12,12 +11,21 @@ export const ProductAddonTypeDefs = gql`
     isDeleted: Boolean!
   }
   type Query {
-   getProductAddons: [ProductAddon]
-  getAllProductAddons: [ProductAddon]
+    getProductAddons: [ProductAddon]
+    getAllProductAddons: [ProductAddon]
   }
   type Mutation {
-    addProductAddon( productId: Int, addonId: Int, restrauntId: Int): ProductAddon
+    addProductAddon(
+      productId: Int
+      addonId: Int
+      restrauntId: Int
+    ): ProductAddon
     softDeleteProductAddon(id: Int): String
-    updateProductAddon(id: Int!, productId: Int, addonId: Int, restrauntId: Int): String
+    updateProductAddon(
+      id: Int!
+      productId: Int
+      addonId: Int
+      restrauntId: Int
+    ): String
   }
 `;

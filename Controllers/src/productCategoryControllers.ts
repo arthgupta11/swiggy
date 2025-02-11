@@ -1,8 +1,8 @@
 // ProductCategoriesController.ts
 import { ProductCategories } from 'Db/src';
 import { IProductCategory } from 'SwiggyInterfaces/src';
-import { IErrorResponse } from './Responses/errorResponseSchema';
-import { sendServerError } from './_helpers/sendError';
+import { IErrorResponse } from './Responses/errorResponseSchema.Responses';
+import { sendClientError, sendServerError } from './_helpers/sendError';
 import { getMaxId } from './_helpers/getMaxId';
 
 export class ProductCategoriesController {
@@ -37,12 +37,10 @@ export class ProductCategoriesController {
   addProductCategory = async (
     _: unknown,
     {
-      
       productId,
       categoryId,
       restrauntId,
     }: {
-     
       productId: number;
       categoryId: number;
       restrauntId: number;
@@ -50,13 +48,12 @@ export class ProductCategoriesController {
   ): Promise<IProductCategory | IErrorResponse> => {
     console.log(productId);
     try {
-
-      const data= {
-        id:await getMaxId(ProductCategories),
+      const data = {
+        id: await getMaxId(ProductCategories),
         productId: productId,
         categoryId: categoryId,
         restrauntId: restrauntId,
-      }
+      };
       const response = await ProductCategories.create(data);
 
       return response.get({ plain: true }) as IProductCategory;
@@ -74,7 +71,11 @@ export class ProductCategoriesController {
         { isDeleted: true, deletedAt: new Date() },
         { where: { id: id }, returning: true }
       );
-      return 'Item deleted succcessfully';
+      if(response[1]){
+              return 'Item deleted succcessfully';
+      }else{
+              return sendClientError('item with given id not found')
+      }
     } catch (error) {
       return sendServerError(error);
     }

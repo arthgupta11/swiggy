@@ -8,25 +8,24 @@ import BaseModel from './baseModel';
   updatedAt: 'modified_at',
 })
 export default class ProductSubcategories extends BaseModel {
-
   @Column({
-     type: DataType.INTEGER,
-     allowNull: false,
-     field:'product_id'
-    })
-    public productId!: number;
+    type: DataType.INTEGER,
+    allowNull: false,
+    field: 'product_id',
+  })
+  public productId!: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field: 'subcategory_id'
-   })
-   public subcategoryId!: number;
+    field: 'subcategory_id',
+  })
+  public subcategoryId!: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field: 'restraunt_id'
+    field: 'restraunt_id',
   })
   public restrauntId!: number;
 }

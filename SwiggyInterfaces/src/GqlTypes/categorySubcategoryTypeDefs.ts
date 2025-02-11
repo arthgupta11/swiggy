@@ -1,7 +1,6 @@
 import { gql } from 'apollo-server';
 
 export const CategorySubcategoryTypeDefs = gql`
- 
   type CategorySubcategory {
     id: Int
     categoryId: Int
@@ -12,6 +11,6 @@ export const CategorySubcategoryTypeDefs = gql`
     isDeleted: Boolean!
   }
   type Query {
-   getCategorySubcategory: [CategorySubcategory]
-   }
+    getCategorySubcategory: [CategorySubcategory]
+  }
 `;

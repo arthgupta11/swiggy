@@ -1,54 +1,76 @@
-import { TDataInput, TProduct, TRestrauntData } from './interface';
+import { TAddon, TDataInput, TProduct, TRestrauntData } from './interface';
 
-const attachAddons = (product: TProduct, data: TDataInput): TProduct => {
-  product.addons = data.ProductAddons.filter(pa => pa.productId === product.id)
-    .map(pa => data.Addons.find(a => a.id === pa.addonId)!)
-    .filter(addon => addon);
-  return product;
-};
 
-const attachRecommendedProducts = (product: TProduct, data: TDataInput): TProduct => {
-  product.recommendedproducts = data.ProductRecommendedProducts.filter(pr => pr.productId === product.id)
-    .map(pr => data.Products.find(p => p.id === pr.recommendedProductId)!)
-    .filter(recommended => recommended);
-  return product;
-};
+const preprocessData = (data: TDataInput) => {
+  const addonMap = new Map(data.Addons.map((a) => [a.id, a]));
+  const productMap = new Map(data.Products.map((p) => [p.id, p]));
 
-const transformSubcategories = (categoryId: number, data: TDataInput) => {
-  return data.Subcategories.filter(subcategory => subcategory.categoryId === categoryId)
-    .map(subcategory => {
-      const products = data.ProductSubcategories.filter(ps => ps.subcategoryId === subcategory.id)
-        .map(ps => {
-          const product = data.Products.find(p => p.id === ps.productId);
-          if (product) {
-            const productWithAddons = attachAddons(product, data);
-            const productWithRecommendations = attachRecommendedProducts(productWithAddons, data);
-            return productWithRecommendations;
-          }
-          return null;
-        })
-        .filter(product => product !== null);
-      return { ...subcategory, products };
-    });
+  const productAddonsMap = new Map<number, TAddon[]>();
+  for (const pa of data.ProductAddons) {
+    if (!productAddonsMap.has(pa.productId)) {
+      productAddonsMap.set(pa.productId, []);
+    }
+    const addon = addonMap.get(pa.addonId);
+    if (addon) {
+      productAddonsMap.get(pa.productId)!.push(addon);
+    }
+  }
+
+  const recommendedProductsMap = new Map<number, TProduct[]>();
+  for (const pr of data.ProductRecommendedProducts) {
+    if (!recommendedProductsMap.has(pr.productId)) {
+      recommendedProductsMap.set(pr.productId, []);
+    }
+    const recommendedProduct = productMap.get(pr.recommendedProductId);
+    if (recommendedProduct) {
+      recommendedProductsMap.get(pr.productId)!.push(recommendedProduct);
+    }
+  }
+
+  const productSubcategoriesMap = new Map<number, TProduct[]>();
+  for (const ps of data.ProductSubcategories) {
+    if (!productSubcategoriesMap.has(ps.subcategoryId)) {
+      productSubcategoriesMap.set(ps.subcategoryId, []);
+    }
+    const product = productMap.get(ps.productId);
+    if (product) {
+      productSubcategoriesMap.get(ps.subcategoryId)!.push({
+        ...product,
+        addons: productAddonsMap.get(product.id) || [],
+        recommendedproducts: recommendedProductsMap.get(product.id) || [],
+      });
+    }
+  }
+
+  return { addonMap, productMap, productAddonsMap, recommendedProductsMap, productSubcategoriesMap };
 };
 
 export const transformData = (data: TDataInput): TRestrauntData => {
-  const result: TRestrauntData = {
+  const { productSubcategoriesMap } = preprocessData(data);
+
+  return {
     id: data.id,
     name: data.name,
-    Categories: data.Categories.map(category => {
-      const subcategories = transformSubcategories(category.id, data);
-      return { ...category, Subcategories: subcategories };
+    Categories: data.Categories.map((category) => {
+      return {
+        ...category,
+        Subcategories: data.Subcategories
+          .filter((sub) => sub.categoryId === category.id)
+          .map((subcategory) => ({
+            ...subcategory,
+            products: productSubcategoriesMap.get(subcategory.id) || [],
+          })),
+      };
     }),
-    Products: data.Products.map(product => {
-      const productWithAddons = attachAddons(product, data);
-      const productWithRecommendations = attachRecommendedProducts(productWithAddons, data);
-      return productWithRecommendations;
-    }),
+    Products: data.Products.map((product) => ({
+      ...product,
+      addons: productSubcategoriesMap.get(product.id) || [],
+      recommendedproducts: productSubcategoriesMap.get(product.id) || [],
+    })),
   };
-
-  return result;
 };
+
+
 
 
 interface Price {
@@ -56,9 +78,14 @@ interface Price {
   priceValue: number;
 }
 
-export const transformPriceArray = (prices: Price[]): Record<string, number> => {
-  return prices.reduce((accumulator, item) => {
-    accumulator[item.priceKey] = item.priceValue; // Add key-value pair to the result object
-    return accumulator;
-  }, {} as Record<string, number>);
+export const transformPriceArray = (
+  prices: Price[]
+): Record<string, number> => {
+  return prices.reduce(
+    (accumulator, item) => {
+      accumulator[item.priceKey] = item.priceValue; // Add key-value pair to the result object
+      return accumulator;
+    },
+    {} as Record<string, number>
+  );
 };

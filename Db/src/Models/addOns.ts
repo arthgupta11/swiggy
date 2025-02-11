@@ -16,7 +16,7 @@ export default class Addons extends BaseModel {
 
   @Column({
     type: DataType.JSON,
-    allowNull: false
+    allowNull: false,
   })
   public price!: JSON;
 
@@ -29,8 +29,7 @@ export default class Addons extends BaseModel {
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field:'restraunt_id'
+    field: 'restraunt_id',
   })
   public restrauntId!: number;
 }
-

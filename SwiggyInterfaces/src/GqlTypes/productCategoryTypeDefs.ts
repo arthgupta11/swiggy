@@ -1,7 +1,6 @@
 import { gql } from 'apollo-server';
 
 export const ProductCategoryTypeDefs = gql`
- 
   type ProductCategory {
     id: Int!
     productId: Int
@@ -12,12 +11,21 @@ export const ProductCategoryTypeDefs = gql`
     isDeleted: Boolean!
   }
   type Query {
-   getProductCategories: [ProductCategory]
+    getProductCategories: [ProductCategory]
     getAllProductCategories: [ProductCategory]
   }
   type Mutation {
-    addProductCategory(productId: Int, categoryId: Int, restrauntId: Int): ProductCategory
+    addProductCategory(
+      productId: Int
+      categoryId: Int
+      restrauntId: Int
+    ): ProductCategory
     softDeleteProductCategory(id: Int): String
-    updateProductCategory(id: Int!, productId: Int, categoryId: Int, restrauntId: Int): String
+    updateProductCategory(
+      id: Int!
+      productId: Int
+      categoryId: Int
+      restrauntId: Int
+    ): String
   }
 `;

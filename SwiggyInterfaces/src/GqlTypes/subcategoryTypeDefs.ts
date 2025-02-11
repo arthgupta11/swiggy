@@ -17,10 +17,21 @@ export const SubcategoryTypeDefs = gql`
     getAllSubcategories: [Subcategory]
   }
   type Mutation {
-    addSubcategory( name: String, description: String, categoryId: Int, restrauntId: Int): Subcategory
+    addSubcategory(
+      name: String
+      description: String
+      categoryId: Int
+      restrauntId: Int
+    ): Subcategory
     softDeleteSubcategory(id: Int): String
     hardDeleteSubcategory(id: Int): String
     DeleteSubcategory(id: Int): String
-    updateSubcategory(id: Int!, name: String, description: String, categoryId: Int, restrauntId: Int): String
+    updateSubcategory(
+      id: Int!
+      name: String
+      description: String
+      categoryId: Int
+      restrauntId: Int
+    ): String
   }
 `;

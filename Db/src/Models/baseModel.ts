@@ -3,7 +3,7 @@ import { Column, DataType, Model } from 'sequelize-typescript';
 export default class BaseModel extends Model {
   @Column({
     type: DataType.INTEGER,
-    primaryKey: true
+    primaryKey: true,
   })
   public id!: number;
 
@@ -24,7 +24,7 @@ export default class BaseModel extends Model {
   @Column({
     type: DataType.DATE,
     allowNull: true,
-    defaultValue : null,
+    defaultValue: null,
     field: 'deleted_at',
   })
   public deletedAt!: Date;
@@ -33,8 +33,7 @@ export default class BaseModel extends Model {
     type: DataType.BOOLEAN,
     allowNull: false,
     defaultValue: false,
-    field: 'is_deleted'
+    field: 'is_deleted',
   })
   public isDeleted!: boolean;
-
 }

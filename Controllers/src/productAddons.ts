@@ -1,8 +1,8 @@
 // ProductAddonsController.ts
 import { ProductAddons } from 'Db/src';
 import { IProductAddon } from 'SwiggyInterfaces/src';
-import { IErrorResponse } from './Responses/errorResponseSchema';
-import { sendServerError } from './_helpers/sendError';
+import { IErrorResponse } from './Responses/errorResponseSchema.Responses';
+import { sendClientError, sendServerError } from './_helpers/sendError';
 import { getMaxId } from './_helpers/getMaxId';
 
 export class ProductAddonsController {
@@ -31,12 +31,10 @@ export class ProductAddonsController {
   addProductAddon = async (
     _: unknown,
     {
-     
       productId,
       addonId,
       restrauntId,
     }: {
-     
       productId: number;
       addonId: number;
       restrauntId: number;
@@ -49,7 +47,7 @@ export class ProductAddonsController {
         productId: productId,
         addonId: addonId,
         restrauntId: restrauntId,
-      }
+      };
       const response = await ProductAddons.create(data);
 
       return response.get({ plain: true }) as IProductAddon;
@@ -67,7 +65,11 @@ export class ProductAddonsController {
         { isDeleted: true, deletedAt: new Date() },
         { where: { id: id }, returning: true }
       );
-      return 'Item deleted succcessfully';
+      if(response[1]){
+              return 'Item deleted succcessfully';
+       }else{
+              return sendClientError('item with given id not found')
+     }
     } catch (error) {
       return sendServerError(error);
     }

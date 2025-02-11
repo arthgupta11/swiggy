@@ -1,0 +1,7 @@
+eslint
+typescript
+joi
+monolithic architecture
+oop
+sequelize
+mysql

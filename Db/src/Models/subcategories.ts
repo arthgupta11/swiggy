@@ -23,14 +23,14 @@ export default class Subcategories extends BaseModel {
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field: 'category_id'
+    field: 'category_id',
   })
   public categoryId!: number;
 
   @Column({
     type: DataType.INTEGER,
     allowNull: false,
-    field: 'restraunt_id'
+    field: 'restraunt_id',
   })
   public restrauntId!: number;
 }

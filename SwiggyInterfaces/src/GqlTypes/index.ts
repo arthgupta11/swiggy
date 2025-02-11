@@ -19,6 +19,6 @@ export const typeDefs = [
   ProductSubcategoryTypeDefs,
   RestrauntTypeDefs,
   ProductTypeDefs,
-  SubcategoryTypeDefs
+  SubcategoryTypeDefs,
   // Add other type definitions if needed
 ];
